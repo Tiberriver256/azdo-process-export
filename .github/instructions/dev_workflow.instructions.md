@@ -19,13 +19,50 @@ The fundamental development cycle you will facilitate is:
 2.  **`next`**: Help the user decide what to work on.
 3.  **`show <id>`**: Provide details for a specific task.
 4.  **`expand <id>`**: Break down a complex task into smaller, manageable subtasks.
-5.  **Understand**: Use the sequential thinking tool and your documentation search instructions to fully understand the task and it's requirements.
+5.  **Understand**: Use specific documentation search tools to fully understand the task and its requirements:
+    - **For Azure DevOps/Microsoft topics**: Use `microsoft_docs_search` tool
+    - **For library documentation**: Use `resolve-library-id` then `get-library-docs` tools
+    - **For other topics**: Use web search as fallback
 6.  **Implement**: The user writes the code and tests.
 7.  **`update-subtask`**: Log progress and findings on behalf of the user.
 8.  **`set-status`**: Mark tasks and subtasks as `done` as work is completed.
 9.  **Repeat**.
 
 All your standard command executions should operate on the user's current task context, which defaults to `master`.
+
+---
+
+## Documentation and Research Strategy
+
+For this project, use specific documentation tools based on the technology being researched:
+
+### Azure DevOps & Microsoft Technologies
+
+- **Primary Tool**: `microsoft_docs_search`
+- **Use For**: Azure DevOps APIs, .NET, C#, PowerShell, ASP.NET Core, Azure services
+- **Example**: `microsoft_docs_search("Azure DevOps REST API authentication methods")`
+
+### Library Documentation
+
+- **Step 1**: Use `resolve-library-id` to find the Context7 library ID
+- **Step 2**: Use `get-library-docs` with the resolved ID for detailed documentation
+- **Available Libraries for This Project**:
+  - Azure DevOps Python API: `/microsoft/azure-devops-python-api`
+  - Azure Identity: `/azure/azure-sdk-for-python` (contains azure-identity)
+  - Click CLI framework: `/pallets/click`
+  - HTTPX HTTP client: `/encode/httpx`
+  - Behave BDD testing: `/behave/behave`
+  - Pytest testing: `/pytest-dev/pytest`
+- **Example**:
+  ```
+  resolve-library-id("click")
+  get-library-docs("/pallets/click", topic="command line interfaces")
+  ```
+
+### General Topics
+
+- **Fallback**: Use web search for topics not covered by the above tools
+- **Use For**: General programming concepts, architecture patterns, best practices
 
 ---
 
@@ -39,11 +76,11 @@ For new projects or when users are getting started, operate within the `master` 
 - Configure rule sets during initialization with `--rules` flag (e.g., `task-master init --rules vscode,windsurf`) or manage them later with `task-master rules add/remove` commands
 - Begin coding sessions with `get_tasks` / `task-master list` (see @`taskmaster.md`) to see current tasks, status, and IDs
 - Determine the next task to work on using `next_task` / `task-master next` (see @`taskmaster.md`)
-- Analyze task complexity with `analyze_project_complexity` / `task-master analyze-complexity --research` (see @`taskmaster.md`) before breaking down tasks
+- Analyze task complexity with `analyze_project_complexity` / `task-master analyze-complexity` (see @`taskmaster.md`) before breaking down tasks
 - Review complexity report using `complexity_report` / `task-master complexity-report` (see @`taskmaster.md`)
 - Select tasks based on dependencies (all marked 'done'), priority level, and ID order
 - View specific task details using `get_task` / `task-master show <id>` (see @`taskmaster.md`) to understand implementation requirements
-- Break down complex tasks using `expand_task` / `task-master expand --id=<id> --force --research` (see @`taskmaster.md`) with appropriate flags like `--force` (to replace existing subtasks) and `--research`
+- Break down complex tasks using `expand_task` / `task-master expand --id=<id> --force` (see @`taskmaster.md`) with appropriate flags like `--force` (to replace existing subtasks)
 - Implement code following task details, dependencies, and project standards
 - Mark completed tasks with `set_task_status` / `task-master set-status --id=<id> --status=done` (see @`taskmaster.md`)
 - Update dependent tasks when implementation differs from original plan using `update` / `task-master update --from=<id> --prompt="..."` or `update_task` / `task-master update-task --id=<id> --prompt="..."` (see @`taskmaster.md`)
@@ -105,14 +142,12 @@ Tailor your approach based on the project maturity indicated by tag names.
   - **Your Approach**: Focus on speed and functionality over perfection
   - **Task Generation**: Create tasks that emphasize "get it working" over "get it perfect"
   - **Complexity Level**: Lower complexity, fewer subtasks, more direct implementation paths
-  - **Research Prompts**: Include context like "This is a prototype - prioritize speed and basic functionality over optimization"
   - **Example Prompt Addition**: _"Since this is for the MVP, I'll focus on tasks that get core functionality working quickly rather than over-engineering."_
 
 - **Production/Mature Tags** (`v1.0+`, `production`, `stable`):
   - **Your Approach**: Emphasize robustness, testing, and maintainability
   - **Task Generation**: Include comprehensive error handling, testing, documentation, and optimization
   - **Complexity Level**: Higher complexity, more detailed subtasks, thorough implementation paths
-  - **Research Prompts**: Include context like "This is for production - prioritize reliability, performance, and maintainability"
   - **Example Prompt Addition**: _"Since this is for production, I'll ensure tasks include proper error handling, testing, and documentation."_
 
 ### Advanced Workflow (Tag-Based & PRD-Driven)
@@ -152,14 +187,14 @@ Once you transition to tag-based workflows, the `master` tag should ideally cont
 3. **Collaborative PRD Creation**: Work with user to create comprehensive PRD in `.taskmaster/docs/feature-[name]-prd.txt`
 4. **Parse & Prepare**:
    - `parse_prd .taskmaster/docs/feature-[name]-prd.txt --tag=feature-[name]`
-   - `analyze_project_complexity --tag=feature-[name] --research`
-   - `expand_all --tag=feature-[name] --research`
+   - `analyze_project_complexity --tag=feature-[name]`
+   - `expand_all --tag=feature-[name]`
 5. **Add Master Reference**: Create a high-level task in `master` that references the feature tag
 
 **For Existing Codebase Analysis**:
 When users initialize Taskmaster on existing projects:
 
-1. **Codebase Discovery**: Use your native tools for producing deep context about the code base. You may use `research` tool with `--tree` and `--files` to collect up to date information using the existing architecture as context.
+1. **Codebase Discovery**: Use your native tools to produce deep context about the codebase, including semantic search, file reading, and grep searches to understand the existing architecture.
 2. **Collaborative Assessment**: Work with user to identify improvement areas, technical debt, or new features
 3. **Strategic PRD Creation**: Co-author PRDs that include:
    - Current state analysis (based on your codebase research)
@@ -196,9 +231,9 @@ Actions:
 
 ```
 User: "I just initialized Taskmaster on my existing React app. It's getting messy and I want to improve it."
-Your Response: "Let me research your codebase to understand the current architecture, then we can create a strategic plan for improvements."
+Your Response: "Let me analyze your codebase to understand the current architecture, then we can create a strategic plan for improvements."
 Actions:
-1. research "Current React app architecture and improvement opportunities" --tree --files=src/
+1. Use semantic search and file analysis to understand current React app architecture and improvement opportunities
 2. Collaborate on improvement PRD based on findings
 3. Create tags for different improvement areas (refactor-components, improve-state-management, etc.)
 4. Keep only major improvement initiatives in master
@@ -240,7 +275,7 @@ Taskmaster offers two primary ways to interact:
 
 ## Task Complexity Analysis
 
-- Run `analyze_project_complexity` / `task-master analyze-complexity --research` (see @`taskmaster.md`) for comprehensive analysis
+- Run `analyze_project_complexity` / `task-master analyze-complexity` (see @`taskmaster.md`) for comprehensive analysis
 - Review complexity report via `complexity_report` / `task-master complexity-report` (see @`taskmaster.md`) for a formatted, readable version.
 - Focus on tasks with highest complexity scores (8-10) for detailed breakdown
 - Use analysis results to determine appropriate subtask allocation
@@ -274,8 +309,8 @@ This approach ensures incremental progress, robust test coverage, and maintainab
 - When implementation differs significantly from planned approach
 - When future tasks need modification due to current implementation choices
 - When new dependencies or requirements emerge
-- Use `update` / `task-master update --from=<futureTaskId> --prompt='<explanation>\nUpdate context...' --research` to update multiple future tasks.
-- Use `update_task` / `task-master update-task --id=<taskId> --prompt='<explanation>\nUpdate context...' --research` to update a single specific task.
+- Use `update` / `task-master update --from=<futureTaskId> --prompt='<explanation>\nUpdate context...'` to update multiple future tasks.
+- Use `update_task` / `task-master update-task --id=<taskId> --prompt='<explanation>\nUpdate context...'` to update a single specific task.
 
 ## Task Status Management
 
@@ -306,7 +341,7 @@ Taskmaster configuration is managed through two main mechanisms:
 1.  **`.taskmaster/config.json` File (Primary):**
 
     - Located in the project root directory.
-    - Stores most configuration settings: AI model selections (main, research, fallback), parameters (max tokens, temperature), logging level, default subtasks/priority, project name, etc.
+    - Stores most configuration settings: AI model selections (main, fallback), parameters (max tokens, temperature), logging level, default subtasks/priority, project name, etc.
     - **Tagged System Settings**: Includes `global.defaultTag` (defaults to "master") and `tags` section for tag management configuration.
     - **Managed via `task-master models --setup` command.** Do not edit manually unless you know what you are doing.
     - **View/Set specific models via `task-master models` command or `models` MCP tool.**
