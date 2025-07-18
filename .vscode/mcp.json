@@ -2,7 +2,17 @@
   "servers": {
     "task-master-ai": {
       "command": "npx",
-      "args": ["-y", "--package=task-master-ai", "task-master-ai"]
+      "args": ["-y", "--package=task-master-ai", "task-master-ai"],
+      "type": "stdio"
+    },
+    "context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "type": "http"
+    },
+    "ms-docs": {
+      "url": "https://learn.microsoft.com/api/mcp",
+      "type": "http"
     }
-  }
+  },
+  "inputs": []
 }

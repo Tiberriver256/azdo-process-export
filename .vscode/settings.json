@@ -1,0 +1,7 @@
+{
+  "chat.mcp.serverSampling": {
+    "azdo-process-export/.vscode/mcp.json: task-master-ai": {
+      "allowedDuringChat": true
+    }
+  }
+}
