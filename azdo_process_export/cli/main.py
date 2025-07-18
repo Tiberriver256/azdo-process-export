@@ -82,27 +82,57 @@ def process(
         azdo-process-export process "My Project" --skip-metrics
     """
     logger = logging.getLogger(__name__)
-    
     logger.info(f"Starting export for project: [bold]{project_name}[/bold]", extra={"markup": True})
-    
+
     if not organization:
         logger.error("Organization not specified. Use --organization or set AZDO_ORGANIZATION environment variable.")
         sys.exit(1)
-    
-    # TODO: Import and call the actual export logic from domain layer
-    logger.info("Export logic not yet implemented")
-    logger.info(f"Would export project '{project_name}' from organization '{organization}' to {out}")
-    
-    if pat:
-        logger.debug("Using Personal Access Token for authentication")
-    else:
-        logger.debug("Using DefaultAzureCredential for authentication")
-    
-    if skip_metrics:
-        logger.info("Skipping Analytics metrics collection")
-    
-    # Placeholder success
-    console.print("Export would complete successfully!", style="green")
+
+    # Import authentication logic
+    from azdo_process_export.infrastructure.auth import get_auth_headers, AuthenticationError
+    try:
+        auth_headers = get_auth_headers(pat)
+        # Emit structured log for authentication success with credential source
+        import json
+        if pat:
+            # Emit a JSON log line for Behave to parse
+            print(json.dumps({
+                "event": "authentication_success",
+                "credential_source": "PAT"
+            }))
+            logger.info(
+                "Authentication success",
+                extra={
+                    "event": "authentication_success",
+                    "credential_source": "PAT"
+                }
+            )
+            # Emit authentication headers as a JSON line for Behave to parse
+            print(json.dumps(auth_headers))
+        else:
+            print(json.dumps({
+                "event": "authentication_success",
+                "credential_source": "DefaultAzureCredential"
+            }))
+            logger.info(
+                "Authentication success",
+                extra={
+                    "event": "authentication_success",
+                    "credential_source": "DefaultAzureCredential"
+                }
+            )
+            print(json.dumps(auth_headers))
+        logger.info("Authentication headers generated", extra={"headers": auth_headers})
+        # Simulate using the headers for an API call (actual export logic not yet implemented)
+        logger.info(f"Would export project '{project_name}' from organization '{organization}' to {out}", extra={"auth_headers": auth_headers})
+        if skip_metrics:
+            logger.info("Skipping Analytics metrics collection")
+        console.print("Export would complete successfully!", style="green")
+        sys.exit(0)
+    except AuthenticationError as e:
+        logger.error(f"Authentication failed: {e}", extra={"event": "auth_failure", "error": str(e)})
+        console.print(f"[red]Authentication failed: {e}[/red]")
+        sys.exit(2)
 
 
 if __name__ == "__main__":

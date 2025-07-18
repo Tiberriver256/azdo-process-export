@@ -107,8 +107,32 @@ def step_file_contains_valid_json(context, file_path):
 
 @then('the structured log should contain authentication success with PAT credential source')
 def step_structured_log_contains_pat_success(context):
-    assert False, "Structured log does not contain authentication success with PAT credential source (not implemented)"
+    # Check CLI output for a structured JSON log line with authentication success and PAT credential source
+    import re
+    import json
+    found = False
+    # Search for JSON log lines in stdout
+    for line in context.cli_output.splitlines():
+        try:
+            log_obj = json.loads(line)
+            if (
+                log_obj.get("event") == "authentication_success"
+                and log_obj.get("credential_source") == "PAT"
+            ):
+                found = True
+                break
+        except Exception:
+            continue
+    assert found, "Structured log does not contain authentication success with PAT credential source"
 
 @then('the authentication headers should contain Basic authorization')
 def step_auth_headers_contain_basic(context):
-    assert False, "Authentication headers do not contain Basic authorization (not implemented)"
+    # Check CLI output for a Basic authorization header
+    import re
+    found = False
+    # Look for a line containing 'Authorization' and 'Basic'
+    for line in context.cli_output.splitlines():
+        if re.search(r'"Authorization":\s*"Basic [A-Za-z0-9+/=]+"', line):
+            found = True
+            break
+    assert found, "Authentication headers do not contain Basic authorization"
