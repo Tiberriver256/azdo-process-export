@@ -62,7 +62,7 @@
         "id": 2,
         "title": "Implement CLI Entry Point with Click",
         "description": "Develop the CLI interface using Click, supporting the 'process' verb and all required options, following TDD principles.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           1
         ],
@@ -74,7 +74,7 @@
             "id": 1,
             "title": "Set Up CLI Project Structure for TDD",
             "description": "Create the initial CLI project structure and ensure TDD workflow is established.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "details": "Create /azdo_process_export/cli/main.py and /azdo_process_export/cli/__init__.py. Set up /tests/features/cli_basic.feature and /tests/steps/cli_steps.py for Behave-driven development. Ensure CLI entry point is ready for TDD-based implementation.",
             "testStrategy": "Verify that the CLI entry point runs without errors and displays a basic help message. Confirm that Behave scenarios can be executed and fail as expected before implementation."
@@ -83,7 +83,7 @@
             "id": 2,
             "title": "Implement 'process' Command with Required Options via TDD",
             "description": "Develop the 'process' command in Click using TDD: start with Behave scenario, failing test, then CLI code.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -94,7 +94,7 @@
             "id": 3,
             "title": "Add Global Options and Version/Help Support via TDD",
             "description": "Integrate --version and --help options using TDD: scenario, failing test, then implementation.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               2
             ],
@@ -105,7 +105,7 @@
             "id": 4,
             "title": "Validate Option Handling and Error Messaging via TDD",
             "description": "Implement robust error handling for missing or invalid options using TDD: scenario, failing test, then implementation.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               3
             ],
@@ -116,7 +116,7 @@
             "id": 5,
             "title": "Integrate CLI with Behave and Unit Tests via TDD",
             "description": "Write Behave scenarios and unit tests to validate CLI invocation, option handling, and output structure, following TDD.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               4
             ],
@@ -127,7 +127,7 @@
             "id": 6,
             "title": "Document TDD Workflow for CLI Development",
             "description": "Create documentation outlining the TDD workflow for CLI development, including feature file creation, failing test writing, and implementation steps.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "details": "Write a README or developer guide describing the TDD process for CLI features: start with a Behave scenario in /tests/features/cli_basic.feature, write failing step definitions in /tests/steps/cli_steps.py, implement CLI code in /azdo_process_export/cli/main.py and /azdo_process_export/cli/__init__.py, and refactor only after tests pass.",
             "testStrategy": "Review documentation for clarity and completeness. Ensure it covers all required TDD steps and references correct file locations."
@@ -437,7 +437,7 @@
     ],
     "metadata": {
       "created": "2025-07-18T20:14:51.299Z",
-      "updated": "2025-07-18T20:36:36.787Z",
+      "updated": "2025-07-18T20:54:49.483Z",
       "description": "Tasks for master context"
     }
   }
