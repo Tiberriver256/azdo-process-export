@@ -1,0 +1,25 @@
+# Task ID: 14
+# Title: Continuous Integration Setup
+# Status: pending
+# Dependencies: 13
+# Priority: medium
+# Description: Configure CI pipeline to run tests, Behave acceptance suite, and measure runtime and file size metrics.
+# Details:
+Use GitHub Actions or Azure Pipelines. Steps: lint (ruff), unit tests (pytest), Behave acceptance, runtime/file size checks. Publish logs and artefacts. Place CI config in /.github/workflows/ci.yml.
+
+# Test Strategy:
+Verify CI runs on PR and main. Ensure artefacts and logs are published. Behave failures block merge.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for CI pipeline [pending]
+### Dependencies: None
+### Description: Create a Behave scenario testing CI pipeline setup and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make CI pipeline scenario pass and final refactor [pending]
+### Dependencies: 14.1
+### Description: Implement CI pipeline configuration to make scenario pass, then refactor for metrics collection and production readiness.
+### Details:
+
+

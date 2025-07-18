@@ -1,0 +1,31 @@
+# Task ID: 8
+# Title: Enrich Users via Microsoft Graph API
+# Status: pending
+# Dependencies: 6, 7
+# Priority: medium
+# Description: Lookup Azure DevOps identities in Microsoft Graph to fetch job title and mail, and annotate usage patterns.
+# Details:
+Use msgraph-core==1.0.0 and httpx for Graph API calls. For each unique user ID, fetch /users/{id}. Annotate users with PR-heavy or work-item-heavy based on metrics. Place enrichment logic in /domain/user_enrichment.py.
+
+# Test Strategy:
+Behave scenarios for user enrichment. Unit test Graph API integration and annotation logic.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for Graph API user lookup [pending]
+### Dependencies: None
+### Description: Create a Behave scenario testing basic Microsoft Graph API user lookup and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make user lookup scenario pass and refactor [pending]
+### Dependencies: 8.1
+### Description: Implement minimal Graph API user lookup to make scenario pass, then refactor for maintainability.
+### Details:
+
+
+## 3. Scenario 2: Enrichment scenario, implement, and final refactor [pending]
+### Dependencies: 8.2
+### Description: Create scenario for job title and mail enrichment, implement to pass, then refactor for production readiness.
+### Details:
+
+

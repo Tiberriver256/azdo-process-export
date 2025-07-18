@@ -1,0 +1,31 @@
+# Task ID: 9
+# Title: Serialize Domain Objects to JSON with orjson
+# Status: pending
+# Dependencies: 6, 7, 8
+# Priority: high
+# Description: Serialize all collected domain objects into a single portable JSON file using orjson.
+# Details:
+Use orjson==3.9.10 for fast serialization. Ensure output matches published schema and is ≤50 MB for typical projects. Place serialization logic in /infrastructure/serialization.py.
+
+# Test Strategy:
+Unit test serialization for schema compliance and file size. Behave scenario for end-to-end export.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for JSON serialization [pending]
+### Dependencies: None
+### Description: Create a Behave scenario testing basic JSON serialization with orjson and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make serialization scenario pass and refactor [pending]
+### Dependencies: 9.1
+### Description: Implement basic orjson serialization to make scenario pass, then refactor for maintainability.
+### Details:
+
+
+## 3. Scenario 2: Complete serialization scenario, implement, and final refactor [pending]
+### Dependencies: 9.2
+### Description: Create scenario for complete domain objects serialization, implement to pass, then final refactor for production.
+### Details:
+
+

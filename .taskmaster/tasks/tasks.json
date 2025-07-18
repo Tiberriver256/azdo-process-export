@@ -137,15 +137,124 @@
       {
         "id": 3,
         "title": "Implement Authentication Logic",
-        "description": "Support DefaultAzureCredential chain and PAT override for Azure DevOps and OData APIs.",
-        "details": "Use azure-identity==1.14.0 for DefaultAzureCredential. Accept --pat and use for BasicAuth. Implement credential precedence logic. Ensure compatibility with both REST and OData endpoints. Place authentication logic in /infrastructure/auth.py.",
-        "testStrategy": "Behave scenarios for both Azure environment and PAT fallback. Mock credential failures and verify error messaging.",
-        "priority": "high",
+        "description": "Support DefaultAzureCredential chain and PAT override for Azure DevOps and OData APIs, following latest best practices for credential precedence, error handling, and logging.",
+        "status": "pending",
         "dependencies": [
           2
         ],
-        "status": "pending",
-        "subtasks": []
+        "priority": "high",
+        "details": "Implement authentication logic in /infrastructure/auth.py. If --pat is provided, always use it for Basic Auth and do not fallback to Azure AD if PAT fails. If no PAT is provided, use DefaultAzureCredential from azure-identity==1.14.0 for Bearer token authentication. Ensure correct token scope for both Azure DevOps and OData endpoints. Centralize error handling and structured JSON logging for all credential operations and failures. Emit clear, actionable error messages and map fatal credential errors to exit code 2. Document credential precedence and troubleshooting steps in README and CLI help.",
+        "testStrategy": "Use Behave scenarios to test both credential paths (PAT and Azure AD), including mocked failures for each. Verify error messaging, exit codes, and structured JSON logging output. Ensure correct token scopes are used for Azure DevOps and OData endpoints. Validate documentation updates for credential precedence and troubleshooting.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for basic PAT authentication",
+            "description": "Create a Behave scenario testing basic PAT authentication and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make basic PAT authentication scenario pass",
+            "description": "Implement minimal PAT authentication in /infrastructure/auth.py to make the basic PAT scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 3,
+            "title": "Refactor 1: Clean up PAT authentication implementation",
+            "description": "Refactor PAT authentication implementation for clarity and maintainability while keeping tests green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 4,
+            "title": "Scenario 2: Write failing test for DefaultAzureCredential fallback",
+            "description": "Create a Behave scenario testing DefaultAzureCredential fallback when no PAT is provided and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 5,
+            "title": "Implement 2: Make DefaultAzureCredential scenario pass",
+            "description": "Implement DefaultAzureCredential fallback with correct Azure DevOps token scope to make the scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 6,
+            "title": "Refactor 2: Clean up DefaultAzureCredential implementation",
+            "description": "Refactor DefaultAzureCredential implementation for better structure while keeping tests green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              5
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 7,
+            "title": "Scenario 3: Write failing test for error handling and logging",
+            "description": "Create a Behave scenario testing authentication error handling and structured JSON logging and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              6
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 8,
+            "title": "Implement 3: Make error handling and logging scenario pass",
+            "description": "Implement structured JSON logging and centralized error handling with clear error messages to make the scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              7
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 9,
+            "title": "Scenario 4: Write failing test for documentation and help",
+            "description": "Create a Behave scenario testing credential precedence documentation and troubleshooting and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              8
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 10,
+            "title": "Implement 4: Make documentation scenario pass and final refactor",
+            "description": "Implement documentation updates for README and CLI help to make the scenario pass, then final refactor for production readiness.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              9
+            ],
+            "parentTaskId": 3
+          }
+        ]
       },
       {
         "id": 4,
@@ -158,7 +267,105 @@
           2
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for basic structured logging setup",
+            "description": "Create a Behave scenario that tests basic structured JSON logger initialization and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 4
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make basic logging scenario pass",
+            "description": "Implement minimal code to make the basic structured logging scenario pass - create logger configuration and basic JSON output.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 4
+          },
+          {
+            "id": 3,
+            "title": "Refactor 1: Clean up basic logging implementation",
+            "description": "Clean up the basic logging implementation for clarity and maintainability while ensuring tests remain green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "parentTaskId": 4
+          },
+          {
+            "id": 4,
+            "title": "Scenario 2: Write failing test for log level configuration",
+            "description": "Create a Behave scenario testing different log levels (info, debug, trace) and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "parentTaskId": 4
+          },
+          {
+            "id": 5,
+            "title": "Implement 2: Make log level scenario pass",
+            "description": "Implement log level configuration support to make the log level scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "parentTaskId": 4
+          },
+          {
+            "id": 6,
+            "title": "Refactor 2: Clean up log level implementation",
+            "description": "Refactor log level implementation for better structure and maintainability while keeping tests green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              5
+            ],
+            "parentTaskId": 4
+          },
+          {
+            "id": 7,
+            "title": "Scenario 3: Write failing test for Better Stack compliance",
+            "description": "Create a Behave scenario testing Better Stack guidance compliance for structured logging and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              6
+            ],
+            "parentTaskId": 4
+          },
+          {
+            "id": 8,
+            "title": "Implement 3: Make Better Stack compliance scenario pass",
+            "description": "Implement Better Stack compliance features to make the compliance scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              7
+            ],
+            "parentTaskId": 4
+          },
+          {
+            "id": 9,
+            "title": "Refactor 3: Final cleanup for production readiness",
+            "description": "Final refactor of the complete structured logging implementation for production readiness while ensuring all tests remain green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              8
+            ],
+            "parentTaskId": 4
+          }
+        ]
       },
       {
         "id": 5,
@@ -175,56 +382,133 @@
         "subtasks": [
           {
             "id": 1,
-            "title": "Design Async HTTP Client Interface",
-            "description": "Define the interface and structure for the async HTTP client, specifying methods for GET, POST, and error handling.",
-            "dependencies": [],
-            "details": "Create a class in /infrastructure/http_client.py with async methods for HTTP operations. Ensure extensibility for future features.",
+            "title": "Scenario 1: Write failing test for basic async HTTP GET",
+            "description": "Create a Behave scenario testing basic async HTTP GET request functionality and verify it fails initially.",
+            "details": "",
             "status": "pending",
-            "testStrategy": "Unit test method signatures and basic instantiation."
+            "dependencies": [],
+            "parentTaskId": 5
           },
           {
             "id": 2,
-            "title": "Integrate httpx with Asyncio Concurrency Control",
-            "description": "Implement async HTTP requests using httpx==0.27.0, managing concurrency with asyncio.Semaphore(10).",
+            "title": "Implement 1: Make basic GET scenario pass",
+            "description": "Implement minimal async HTTP client with httpx to make the basic GET scenario pass.",
+            "details": "",
+            "status": "pending",
             "dependencies": [
               1
             ],
-            "details": "Use asyncio.Semaphore to restrict concurrent requests to 10. Ensure all requests are performed asynchronously.",
-            "status": "pending",
-            "testStrategy": "Unit test concurrency limits by simulating multiple simultaneous requests."
+            "parentTaskId": 5
           },
           {
             "id": 3,
-            "title": "Implement Exponential Backoff for 429/503 Responses",
-            "description": "Integrate tenacity==8.2.2 to apply exponential backoff retries for HTTP 429 and 503 errors.",
+            "title": "Refactor 1: Clean up basic HTTP client",
+            "description": "Refactor basic HTTP client implementation for clarity and maintainability while keeping tests green.",
+            "details": "",
+            "status": "pending",
             "dependencies": [
               2
             ],
-            "details": "Configure tenacity retry logic to trigger on 429/503 responses, with customizable backoff parameters.",
-            "status": "pending",
-            "testStrategy": "Unit test retry behavior using mocked 429/503 responses."
+            "parentTaskId": 5
           },
           {
             "id": 4,
-            "title": "Centralize Error Handling for Transient Failures",
-            "description": "Develop centralized error handling logic for 429/503 responses and other transient errors within the client.",
+            "title": "Scenario 2: Write failing test for concurrency control",
+            "description": "Create a Behave scenario testing concurrent HTTP requests (max 10) and verify it fails initially.",
+            "details": "",
+            "status": "pending",
             "dependencies": [
               3
             ],
-            "details": "Create a unified error handling mechanism to log, retry, and escalate errors as needed.",
-            "status": "pending",
-            "testStrategy": "Unit test error handling paths and ensure correct logging and retry escalation."
+            "parentTaskId": 5
           },
           {
             "id": 5,
-            "title": "Finalize Client Implementation and Documentation",
-            "description": "Refactor, document, and ensure the client is production-ready in /infrastructure/http_client.py.",
+            "title": "Implement 2: Make concurrency scenario pass",
+            "description": "Implement asyncio.Semaphore(10) concurrency control to make the concurrency scenario pass.",
+            "details": "",
+            "status": "pending",
             "dependencies": [
               4
             ],
-            "details": "Add docstrings, usage examples, and finalize code structure. Ensure compliance with project standards.",
+            "parentTaskId": 5
+          },
+          {
+            "id": 6,
+            "title": "Refactor 2: Clean up concurrency implementation",
+            "description": "Refactor concurrency implementation for better structure while keeping tests green.",
+            "details": "",
             "status": "pending",
-            "testStrategy": "Code review, documentation validation, and integration tests with simulated failures."
+            "dependencies": [
+              5
+            ],
+            "parentTaskId": 5
+          },
+          {
+            "id": 7,
+            "title": "Scenario 3: Write failing test for 429 rate limit handling",
+            "description": "Create a Behave scenario testing HTTP 429 rate limit response handling and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              6
+            ],
+            "parentTaskId": 5
+          },
+          {
+            "id": 8,
+            "title": "Implement 3: Make 429 handling scenario pass",
+            "description": "Implement basic exponential backoff for 429 responses using tenacity to make the scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              7
+            ],
+            "parentTaskId": 5
+          },
+          {
+            "id": 9,
+            "title": "Refactor 3: Clean up backoff implementation",
+            "description": "Refactor exponential backoff implementation for better maintainability while keeping tests green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              8
+            ],
+            "parentTaskId": 5
+          },
+          {
+            "id": 10,
+            "title": "Scenario 4: Write failing test for 503 service unavailable handling",
+            "description": "Create a Behave scenario testing HTTP 503 service unavailable response handling and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              9
+            ],
+            "parentTaskId": 5
+          },
+          {
+            "id": 11,
+            "title": "Implement 4: Make 503 handling scenario pass",
+            "description": "Extend exponential backoff to handle 503 responses to make the scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              10
+            ],
+            "parentTaskId": 5
+          },
+          {
+            "id": 12,
+            "title": "Refactor 4: Final cleanup for production readiness",
+            "description": "Final refactor of the complete async HTTP client for production readiness while ensuring all tests remain green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              11
+            ],
+            "parentTaskId": 5
           }
         ]
       },
@@ -239,7 +523,105 @@
           5
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for basic project metadata fetch",
+            "description": "Create a Behave scenario testing basic project metadata fetch and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make basic metadata fetch scenario pass",
+            "description": "Implement minimal project metadata fetch to make the basic scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 3,
+            "title": "Refactor 1: Clean up basic metadata fetch",
+            "description": "Refactor basic metadata fetch implementation while keeping tests green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 4,
+            "title": "Scenario 2: Write failing test for work item types fetch",
+            "description": "Create a Behave scenario testing work item types fetch and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 5,
+            "title": "Implement 2: Make work item types scenario pass",
+            "description": "Implement work item types fetch to make the scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 6,
+            "title": "Refactor 2: Clean up work item types implementation",
+            "description": "Refactor work item types implementation while keeping tests green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              5
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 7,
+            "title": "Scenario 3: Write failing test for remaining metadata types",
+            "description": "Create a Behave scenario testing fields, behaviors, teams, and backlogs fetch and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              6
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 8,
+            "title": "Implement 3: Make remaining metadata scenario pass",
+            "description": "Implement fields, behaviors, teams, and backlogs fetch to make the scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              7
+            ],
+            "parentTaskId": 6
+          },
+          {
+            "id": 9,
+            "title": "Refactor 3: Final cleanup for production readiness",
+            "description": "Final refactor of complete project metadata fetch for production readiness while ensuring all tests remain green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              8
+            ],
+            "parentTaskId": 6
+          }
+        ]
       },
       {
         "id": 7,
@@ -252,7 +634,105 @@
           5
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for OData Analytics connection",
+            "description": "Create a Behave scenario testing basic OData Analytics connection and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 7
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make OData connection scenario pass",
+            "description": "Implement minimal OData Analytics connection to make the basic scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 7
+          },
+          {
+            "id": 3,
+            "title": "Refactor 1: Clean up OData connection",
+            "description": "Refactor OData connection implementation while keeping tests green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "parentTaskId": 7
+          },
+          {
+            "id": 4,
+            "title": "Scenario 2: Write failing test for work items aggregates",
+            "description": "Create a Behave scenario testing work items monthly aggregates query and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "parentTaskId": 7
+          },
+          {
+            "id": 5,
+            "title": "Implement 2: Make work items aggregates scenario pass",
+            "description": "Implement work items monthly aggregates query to make the scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "parentTaskId": 7
+          },
+          {
+            "id": 6,
+            "title": "Refactor 2: Clean up work items aggregates",
+            "description": "Refactor work items aggregates implementation while keeping tests green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              5
+            ],
+            "parentTaskId": 7
+          },
+          {
+            "id": 7,
+            "title": "Scenario 3: Write failing test for PRs and pipeline aggregates",
+            "description": "Create a Behave scenario testing PRs and pipeline runs monthly aggregates and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              6
+            ],
+            "parentTaskId": 7
+          },
+          {
+            "id": 8,
+            "title": "Implement 3: Make PRs and pipeline aggregates scenario pass",
+            "description": "Implement PRs and pipeline runs monthly aggregates query to make the scenario pass.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              7
+            ],
+            "parentTaskId": 7
+          },
+          {
+            "id": 9,
+            "title": "Refactor 3: Final cleanup for production readiness",
+            "description": "Final refactor of complete OData Analytics implementation for production readiness while ensuring all tests remain green.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              8
+            ],
+            "parentTaskId": 7
+          }
+        ]
       },
       {
         "id": 8,
@@ -266,7 +746,39 @@
           7
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for Graph API user lookup",
+            "description": "Create a Behave scenario testing basic Microsoft Graph API user lookup and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 8
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make user lookup scenario pass and refactor",
+            "description": "Implement minimal Graph API user lookup to make scenario pass, then refactor for maintainability.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 8
+          },
+          {
+            "id": 3,
+            "title": "Scenario 2: Enrichment scenario, implement, and final refactor",
+            "description": "Create scenario for job title and mail enrichment, implement to pass, then refactor for production readiness.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "parentTaskId": 8
+          }
+        ]
       },
       {
         "id": 9,
@@ -281,7 +793,39 @@
           8
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for JSON serialization",
+            "description": "Create a Behave scenario testing basic JSON serialization with orjson and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 9
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make serialization scenario pass and refactor",
+            "description": "Implement basic orjson serialization to make scenario pass, then refactor for maintainability.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 9
+          },
+          {
+            "id": 3,
+            "title": "Scenario 2: Complete serialization scenario, implement, and final refactor",
+            "description": "Create scenario for complete domain objects serialization, implement to pass, then final refactor for production.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "parentTaskId": 9
+          }
+        ]
       },
       {
         "id": 10,
@@ -296,7 +840,39 @@
           9
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for credential error handling",
+            "description": "Create a Behave scenario testing credential error handling and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 10
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make credential error scenario pass and refactor",
+            "description": "Implement credential error handling to make scenario pass, then refactor.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 10
+          },
+          {
+            "id": 3,
+            "title": "Scenario 2: Analytics and partial failure scenarios, implement, and final refactor",
+            "description": "Create scenarios for Analytics root unreachable and partial fetch failures, implement, then final refactor.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "parentTaskId": 10
+          }
+        ]
       },
       {
         "id": 11,
@@ -312,7 +888,28 @@
           10
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for --skip-metrics option",
+            "description": "Create a Behave scenario testing --skip-metrics option and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 11
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make skip-metrics scenario pass and final refactor",
+            "description": "Implement --skip-metrics option to make scenario pass, then refactor for maintainability and production readiness.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 11
+          }
+        ]
       },
       {
         "id": 12,
@@ -325,7 +922,28 @@
           9
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for JSON schema publishing",
+            "description": "Create a Behave scenario testing JSON schema publishing and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 12
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make schema publishing scenario pass and final refactor",
+            "description": "Implement JSON schema publishing to make scenario pass, then refactor for versioning and production readiness.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 12
+          }
+        ]
       },
       {
         "id": 13,
@@ -416,7 +1034,28 @@
           13
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for CI pipeline",
+            "description": "Create a Behave scenario testing CI pipeline setup and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 14
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make CI pipeline scenario pass and final refactor",
+            "description": "Implement CI pipeline configuration to make scenario pass, then refactor for metrics collection and production readiness.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 14
+          }
+        ]
       },
       {
         "id": 15,
@@ -432,12 +1071,33 @@
           14
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scenario 1: Write failing test for CLI help documentation",
+            "description": "Create a Behave scenario testing CLI help documentation and verify it fails initially.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 15
+          },
+          {
+            "id": 2,
+            "title": "Implement 1: Make CLI help scenario pass and final refactor",
+            "description": "Implement CLI help documentation to make scenario pass, then refactor for PRD compliance and production readiness.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 15
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-07-18T20:14:51.299Z",
-      "updated": "2025-07-18T20:54:49.483Z",
+      "updated": "2025-07-18T21:08:10.223Z",
       "description": "Tasks for master context"
     }
   }

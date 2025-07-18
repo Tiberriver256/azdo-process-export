@@ -1,0 +1,49 @@
+# Task ID: 2
+# Title: Implement CLI Entry Point with Click
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Develop the CLI interface using Click, supporting the 'process' verb and all required options, following TDD principles.
+# Details:
+All CLI development must be TDD-driven. For each CLI feature, begin by documenting the desired behavior in a Behave scenario in /tests/features/cli_basic.feature. Write a failing test in /tests/steps/cli_steps.py, then implement the CLI code in /azdo_process_export/cli/main.py and /azdo_process_export/cli/__init__.py until the test passes. Refactor only after the test passes. Use Click v8.1+ for robust CLI parsing. Implement 'process' command with options: --project, --out, --pat, --log-level, --skip-metrics, --version, --help. Ensure auto-generated help text matches PRD. Document this workflow and ensure all code changes are test-driven.
+
+# Test Strategy:
+For each CLI feature, write a Behave scenario describing expected CLI invocation and output in /tests/features/cli_basic.feature. Implement failing step definitions in /tests/steps/cli_steps.py. Develop CLI code in /azdo_process_export/cli/main.py and /azdo_process_export/cli/__init__.py until tests pass. Unit test CLI parsing and option handling. Refactor only after passing tests.
+
+# Subtasks:
+## 1. Set Up CLI Project Structure for TDD [done]
+### Dependencies: None
+### Description: Create the initial CLI project structure and ensure TDD workflow is established.
+### Details:
+Create /azdo_process_export/cli/main.py and /azdo_process_export/cli/__init__.py. Set up /tests/features/cli_basic.feature and /tests/steps/cli_steps.py for Behave-driven development. Ensure CLI entry point is ready for TDD-based implementation.
+
+## 2. Implement 'process' Command with Required Options via TDD [done]
+### Dependencies: 2.1
+### Description: Develop the 'process' command in Click using TDD: start with Behave scenario, failing test, then CLI code.
+### Details:
+Document the expected behavior for the 'process' command and its options (--project, --out, --pat, --log-level, --skip-metrics) in /tests/features/cli_basic.feature. Write failing step definitions in /tests/steps/cli_steps.py. Implement the command in /azdo_process_export/cli/main.py and /azdo_process_export/cli/__init__.py until tests pass.
+
+## 3. Add Global Options and Version/Help Support via TDD [done]
+### Dependencies: 2.2
+### Description: Integrate --version and --help options using TDD: scenario, failing test, then implementation.
+### Details:
+Document expected help and version output in /tests/features/cli_basic.feature. Write failing step definitions in /tests/steps/cli_steps.py. Implement global options in CLI code until tests pass. Ensure help/version output matches PRD.
+
+## 4. Validate Option Handling and Error Messaging via TDD [done]
+### Dependencies: 2.3
+### Description: Implement robust error handling for missing or invalid options using TDD: scenario, failing test, then implementation.
+### Details:
+Document error cases and expected messages in /tests/features/cli_basic.feature. Write failing step definitions in /tests/steps/cli_steps.py. Implement error handling in CLI code until tests pass.
+
+## 5. Integrate CLI with Behave and Unit Tests via TDD [done]
+### Dependencies: 2.4
+### Description: Write Behave scenarios and unit tests to validate CLI invocation, option handling, and output structure, following TDD.
+### Details:
+Ensure comprehensive test coverage for CLI behaviors, including all supported options and error cases. All new features must begin with a Behave scenario and failing test before implementation.
+
+## 6. Document TDD Workflow for CLI Development [done]
+### Dependencies: None
+### Description: Create documentation outlining the TDD workflow for CLI development, including feature file creation, failing test writing, and implementation steps.
+### Details:
+Write a README or developer guide describing the TDD process for CLI features: start with a Behave scenario in /tests/features/cli_basic.feature, write failing step definitions in /tests/steps/cli_steps.py, implement CLI code in /azdo_process_export/cli/main.py and /azdo_process_export/cli/__init__.py, and refactor only after tests pass.
+

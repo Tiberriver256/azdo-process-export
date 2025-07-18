@@ -1,0 +1,25 @@
+# Task ID: 15
+# Title: Documentation and CLI Help Verification
+# Status: pending
+# Dependencies: 2, 11, 12, 14
+# Priority: medium
+# Description: Document usage, options, error codes, and ensure CLI help matches PRD requirements.
+# Details:
+Update README.md with usage, options, error handling, and schema info. Verify Click auto-generated help matches PRD. Document authentication precedence and troubleshooting.
+
+# Test Strategy:
+Manual review of documentation. Behave scenario for --help output. Validate README completeness.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for CLI help documentation [pending]
+### Dependencies: None
+### Description: Create a Behave scenario testing CLI help documentation and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make CLI help scenario pass and final refactor [pending]
+### Dependencies: 15.1
+### Description: Implement CLI help documentation to make scenario pass, then refactor for PRD compliance and production readiness.
+### Details:
+
+

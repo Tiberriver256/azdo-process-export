@@ -1,0 +1,67 @@
+# Task ID: 7
+# Title: Fetch Activity Metrics via OData Analytics v4
+# Status: pending
+# Dependencies: 5
+# Priority: high
+# Description: Query OData Analytics endpoints for monthly aggregates of work items, PRs, and pipeline runs.
+# Details:
+Use httpx async client for OData queries. Endpoints: WorkItemsSnapshot, WorkItemRevisions, PullRequestEvents, /pipelines/{id}/runs. Aggregate by month using pandas==2.2.2 for in-memory grouping. Place logic in /domain/metrics.py.
+
+# Test Strategy:
+Behave scenarios for metrics collection. Unit test aggregation logic and error handling.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for OData Analytics connection [pending]
+### Dependencies: None
+### Description: Create a Behave scenario testing basic OData Analytics connection and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make OData connection scenario pass [pending]
+### Dependencies: 7.1
+### Description: Implement minimal OData Analytics connection to make the basic scenario pass.
+### Details:
+
+
+## 3. Refactor 1: Clean up OData connection [pending]
+### Dependencies: 7.2
+### Description: Refactor OData connection implementation while keeping tests green.
+### Details:
+
+
+## 4. Scenario 2: Write failing test for work items aggregates [pending]
+### Dependencies: 7.3
+### Description: Create a Behave scenario testing work items monthly aggregates query and verify it fails initially.
+### Details:
+
+
+## 5. Implement 2: Make work items aggregates scenario pass [pending]
+### Dependencies: 7.4
+### Description: Implement work items monthly aggregates query to make the scenario pass.
+### Details:
+
+
+## 6. Refactor 2: Clean up work items aggregates [pending]
+### Dependencies: 7.5
+### Description: Refactor work items aggregates implementation while keeping tests green.
+### Details:
+
+
+## 7. Scenario 3: Write failing test for PRs and pipeline aggregates [pending]
+### Dependencies: 7.6
+### Description: Create a Behave scenario testing PRs and pipeline runs monthly aggregates and verify it fails initially.
+### Details:
+
+
+## 8. Implement 3: Make PRs and pipeline aggregates scenario pass [pending]
+### Dependencies: 7.7
+### Description: Implement PRs and pipeline runs monthly aggregates query to make the scenario pass.
+### Details:
+
+
+## 9. Refactor 3: Final cleanup for production readiness [pending]
+### Dependencies: 7.8
+### Description: Final refactor of complete OData Analytics implementation for production readiness while ensuring all tests remain green.
+### Details:
+
+

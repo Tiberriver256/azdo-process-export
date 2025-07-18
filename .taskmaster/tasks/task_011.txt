@@ -1,0 +1,25 @@
+# Task ID: 11
+# Title: Implement --skip-metrics Option
+# Status: pending
+# Dependencies: 2, 6, 9, 10
+# Priority: medium
+# Description: Support CLI option to export configuration only, skipping all Analytics queries.
+# Details:
+Add --skip-metrics flag to CLI. Bypass metrics collection logic if set. Ensure output JSON omits metrics section when skipped.
+
+# Test Strategy:
+Behave scenario for --skip-metrics. Unit test output structure.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for --skip-metrics option [pending]
+### Dependencies: None
+### Description: Create a Behave scenario testing --skip-metrics option and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make skip-metrics scenario pass and final refactor [pending]
+### Dependencies: 11.1
+### Description: Implement --skip-metrics option to make scenario pass, then refactor for maintainability and production readiness.
+### Details:
+
+

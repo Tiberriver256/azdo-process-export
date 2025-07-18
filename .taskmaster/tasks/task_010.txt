@@ -1,0 +1,31 @@
+# Task ID: 10
+# Title: Implement Error Handling and Exit Codes
+# Status: pending
+# Dependencies: 6, 7, 9
+# Priority: high
+# Description: Handle errors per PRD: fatal exit for Analytics root unreachable, warnings for partial fetch failures, credential errors.
+# Details:
+Centralize error handling in /cli/cli.py. Map scenarios to exit codes: 0 (success), 1 (partial), 2 (fatal Analytics error). Emit warnings array in JSON output. Log errors with context.
+
+# Test Strategy:
+Behave scenarios for each error case. Unit test exit code logic and warning emission.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for credential error handling [pending]
+### Dependencies: None
+### Description: Create a Behave scenario testing credential error handling and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make credential error scenario pass and refactor [pending]
+### Dependencies: 10.1
+### Description: Implement credential error handling to make scenario pass, then refactor.
+### Details:
+
+
+## 3. Scenario 2: Analytics and partial failure scenarios, implement, and final refactor [pending]
+### Dependencies: 10.2
+### Description: Create scenarios for Analytics root unreachable and partial fetch failures, implement, then final refactor.
+### Details:
+
+

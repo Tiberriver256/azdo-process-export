@@ -1,0 +1,25 @@
+# Task ID: 12
+# Title: Publish and Version JSON Schema
+# Status: pending
+# Dependencies: 9
+# Priority: medium
+# Description: Publish the JSON schema for the export artefact and version it for downstream consumers.
+# Details:
+Define schema in /infrastructure/schema.json. Use jsonschema==4.22.0 for validation. Publish schema to repository and document versioning strategy.
+
+# Test Strategy:
+Unit test schema validation. Behave scenario for schema compliance.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for JSON schema publishing [pending]
+### Dependencies: None
+### Description: Create a Behave scenario testing JSON schema publishing and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make schema publishing scenario pass and final refactor [pending]
+### Dependencies: 12.1
+### Description: Implement JSON schema publishing to make scenario pass, then refactor for versioning and production readiness.
+### Details:
+
+

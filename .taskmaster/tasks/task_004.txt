@@ -1,0 +1,67 @@
+# Task ID: 4
+# Title: Implement Structured JSON Logging
+# Status: pending
+# Dependencies: 2
+# Priority: high
+# Description: Add structured logging per Better Stack guidance, supporting info/debug/trace levels and JSON output.
+# Details:
+Use structlog==23.2.0 for JSON logging. No root logger; configure per module. Support --log-level option. Include timestamps, levels, and trace context. Output logs to stdout and optionally to file. Place logging config in /infrastructure/logging.py.
+
+# Test Strategy:
+Unit test log output format. Behave scenarios for log-level switching. Validate logs are JSON and contain required fields.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for basic structured logging setup [pending]
+### Dependencies: None
+### Description: Create a Behave scenario that tests basic structured JSON logger initialization and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make basic logging scenario pass [pending]
+### Dependencies: 4.1
+### Description: Implement minimal code to make the basic structured logging scenario pass - create logger configuration and basic JSON output.
+### Details:
+
+
+## 3. Refactor 1: Clean up basic logging implementation [pending]
+### Dependencies: 4.2
+### Description: Clean up the basic logging implementation for clarity and maintainability while ensuring tests remain green.
+### Details:
+
+
+## 4. Scenario 2: Write failing test for log level configuration [pending]
+### Dependencies: 4.3
+### Description: Create a Behave scenario testing different log levels (info, debug, trace) and verify it fails initially.
+### Details:
+
+
+## 5. Implement 2: Make log level scenario pass [pending]
+### Dependencies: 4.4
+### Description: Implement log level configuration support to make the log level scenario pass.
+### Details:
+
+
+## 6. Refactor 2: Clean up log level implementation [pending]
+### Dependencies: 4.5
+### Description: Refactor log level implementation for better structure and maintainability while keeping tests green.
+### Details:
+
+
+## 7. Scenario 3: Write failing test for Better Stack compliance [pending]
+### Dependencies: 4.6
+### Description: Create a Behave scenario testing Better Stack guidance compliance for structured logging and verify it fails initially.
+### Details:
+
+
+## 8. Implement 3: Make Better Stack compliance scenario pass [pending]
+### Dependencies: 4.7
+### Description: Implement Better Stack compliance features to make the compliance scenario pass.
+### Details:
+
+
+## 9. Refactor 3: Final cleanup for production readiness [pending]
+### Dependencies: 4.8
+### Description: Final refactor of the complete structured logging implementation for production readiness while ensuring all tests remain green.
+### Details:
+
+

@@ -130,3 +130,5 @@ skip_empty = true
 branch = true
 source = ["azdo_process_export"]
 
+[tool.uv]
+default-groups = ["dev"]

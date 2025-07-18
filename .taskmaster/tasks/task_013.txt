@@ -1,0 +1,43 @@
+# Task ID: 13
+# Title: Acceptance Test Suite with Behave
+# Status: pending
+# Dependencies: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+# Priority: high
+# Description: Develop BDD acceptance tests mapping each requirement to Gherkin scenarios, executed against ephemeral Azure DevOps org.
+# Details:
+Use behave==1.2.6 for BDD. Place features in /features. Automate ephemeral org setup in CI using azdo-demo-org. Map each PRD requirement to a scenario.
+
+# Test Strategy:
+Run Behave suite in CI. Ensure all scenarios pass and failures are logged with rich context.
+
+# Subtasks:
+## 1. Extract PRD Requirements for Test Mapping [pending]
+### Dependencies: None
+### Description: Review the Product Requirements Document (PRD) and extract all requirements that need to be mapped to acceptance tests.
+### Details:
+Gather and document each PRD requirement to ensure comprehensive coverage in the test suite.
+
+## 2. Author Gherkin Scenarios for Each Requirement [pending]
+### Dependencies: 13.1
+### Description: Write Gherkin scenarios in .feature files for each PRD requirement, ensuring clarity and traceability.
+### Details:
+Place all .feature files in the /features directory, with each scenario clearly mapped to its corresponding requirement.
+
+## 3. Implement Behave Step Definitions [pending]
+### Dependencies: 13.2
+### Description: Develop Python step definitions for all Gherkin scenarios using behave==1.2.6.
+### Details:
+Ensure step definitions are modular, reusable, and placed in the appropriate /features/steps directory.
+
+## 4. Automate Ephemeral Azure DevOps Org Setup in CI [pending]
+### Dependencies: 13.3
+### Description: Integrate azdo-demo-org into CI to provision and tear down ephemeral Azure DevOps organizations for test execution.
+### Details:
+Configure CI pipeline to automatically create and destroy orgs for each test run, ensuring isolation and repeatability.
+
+## 5. Execute and Validate Behave Suite in CI [pending]
+### Dependencies: 13.4
+### Description: Run the Behave acceptance test suite in CI against the ephemeral Azure DevOps org, capturing and reporting results.
+### Details:
+Ensure all scenarios are executed, failures are logged with rich context, and results are published as CI artefacts.
+

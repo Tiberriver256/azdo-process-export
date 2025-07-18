@@ -1,0 +1,85 @@
+# Task ID: 5
+# Title: Implement Resilient Async HTTP Client
+# Status: pending
+# Dependencies: 3, 4
+# Priority: high
+# Description: Develop an async HTTP client with exponential backoff for 429/503, supporting up to 10 concurrent requests.
+# Details:
+Use httpx==0.27.0 with asyncio for concurrency. Integrate tenacity==8.2.2 for exponential backoff. Limit concurrency with asyncio.Semaphore(10). Centralize error handling for 429/503. Place client in /infrastructure/http_client.py.
+
+# Test Strategy:
+Unit test retry logic and concurrency limits. Behave scenarios for simulated transient failures.
+
+# Subtasks:
+## 1. Scenario 1: Write failing test for basic async HTTP GET [pending]
+### Dependencies: None
+### Description: Create a Behave scenario testing basic async HTTP GET request functionality and verify it fails initially.
+### Details:
+
+
+## 2. Implement 1: Make basic GET scenario pass [pending]
+### Dependencies: 5.1
+### Description: Implement minimal async HTTP client with httpx to make the basic GET scenario pass.
+### Details:
+
+
+## 3. Refactor 1: Clean up basic HTTP client [pending]
+### Dependencies: 5.2
+### Description: Refactor basic HTTP client implementation for clarity and maintainability while keeping tests green.
+### Details:
+
+
+## 4. Scenario 2: Write failing test for concurrency control [pending]
+### Dependencies: 5.3
+### Description: Create a Behave scenario testing concurrent HTTP requests (max 10) and verify it fails initially.
+### Details:
+
+
+## 5. Implement 2: Make concurrency scenario pass [pending]
+### Dependencies: 5.4
+### Description: Implement asyncio.Semaphore(10) concurrency control to make the concurrency scenario pass.
+### Details:
+
+
+## 6. Refactor 2: Clean up concurrency implementation [pending]
+### Dependencies: 5.5
+### Description: Refactor concurrency implementation for better structure while keeping tests green.
+### Details:
+
+
+## 7. Scenario 3: Write failing test for 429 rate limit handling [pending]
+### Dependencies: 5.6
+### Description: Create a Behave scenario testing HTTP 429 rate limit response handling and verify it fails initially.
+### Details:
+
+
+## 8. Implement 3: Make 429 handling scenario pass [pending]
+### Dependencies: 5.7
+### Description: Implement basic exponential backoff for 429 responses using tenacity to make the scenario pass.
+### Details:
+
+
+## 9. Refactor 3: Clean up backoff implementation [pending]
+### Dependencies: 5.8
+### Description: Refactor exponential backoff implementation for better maintainability while keeping tests green.
+### Details:
+
+
+## 10. Scenario 4: Write failing test for 503 service unavailable handling [pending]
+### Dependencies: 5.9
+### Description: Create a Behave scenario testing HTTP 503 service unavailable response handling and verify it fails initially.
+### Details:
+
+
+## 11. Implement 4: Make 503 handling scenario pass [pending]
+### Dependencies: 5.10
+### Description: Extend exponential backoff to handle 503 responses to make the scenario pass.
+### Details:
+
+
+## 12. Refactor 4: Final cleanup for production readiness [pending]
+### Dependencies: 5.11
+### Description: Final refactor of the complete async HTTP client for production readiness while ensuring all tests remain green.
+### Details:
+
+

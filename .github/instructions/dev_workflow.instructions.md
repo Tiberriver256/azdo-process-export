@@ -248,14 +248,26 @@ Taskmaster offers two primary ways to interact:
 
 ## Task Breakdown Process
 
-- Use `expand_task` / `task-master expand --id=<id>`. It automatically uses the complexity report if found, otherwise generates default number of subtasks.
-- Use `--num=<number>` to specify an explicit number of subtasks, overriding defaults or complexity report recommendations.
-- Add `--research` flag to leverage Perplexity AI for research-backed expansion.
-- Add `--force` flag to clear existing subtasks before generating new ones (default is to append).
-- Use `--prompt="<context>"` to provide additional context when needed.
-- Review and adjust generated subtasks as necessary.
-- Use `expand_all` tool or `task-master expand --all` to expand multiple pending tasks at once, respecting flags like `--force` and `--research`.
-- If subtasks need complete replacement (regardless of the `--force` flag on `expand`), clear them first with `clear_subtasks` / `task-master clear-subtasks --id=<id>`.
+## Test-Driven Task Implementation (Behave-first)
+
+For every new task or subtask, follow this strict test-driven workflow:
+
+1. **Start with a single small Behave scenario:**
+   - Write one scenario that describes the desired behavior for the task.
+   - Ensure this scenario fails initially (red-green cycle).
+2. **Work until the scenario passes:**
+   - Implement only enough code to make the scenario pass.
+   - Avoid over-engineering or adding extra features at this stage.
+3. **Refactor:**
+   - Clean up the implementation for clarity, maintainability, and performance.
+   - Ensure all tests still pass after refactoring.
+4. **Add another small Behave scenario:**
+   - Introduce a new scenario that covers an additional edge case or requirement.
+   - Repeat the cycle: fail → pass → refactor.
+5. **Iterate:**
+   - Continue this process, adding one scenario at a time, until the task is fully implemented and robustly tested.
+
+This approach ensures incremental progress, robust test coverage, and maintainable code. Never implement more than one scenario at a time before refactoring and validating the solution.
 
 ## Implementation Drift Handling
 

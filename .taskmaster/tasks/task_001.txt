@@ -1,0 +1,43 @@
+# Task ID: 1
+# Title: Initialize Project Repository and Screaming Architecture
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Create the project repository with a Screaming Architecture folder structure, separating domain logic from infrastructure details.
+# Details:
+Use Python 3.11+ for best async support. Structure folders as /domain, /infrastructure, /cli, /tests, /features. Add pyproject.toml for dependency management (prefer Poetry). Include .gitignore and README.md. Follow Screaming Architecture principles: domain objects and logic in /domain, API clients in /infrastructure, CLI entrypoint in /cli.
+
+# Test Strategy:
+Verify folder structure matches Screaming Architecture. Ensure all modules are importable and initial test runner executes.
+
+# Subtasks:
+## 1. Create Project Repository and Initialize Git [done]
+### Dependencies: None
+### Description: Set up a new project repository and initialize it with Git version control.
+### Details:
+Create a new directory for the project, initialize Git, and set up the initial commit. Add a .gitignore file tailored for Python projects.
+
+## 2. Establish Screaming Architecture Folder Structure [done]
+### Dependencies: None
+### Description: Create the required folder structure following Screaming Architecture principles.
+### Details:
+Add /domain, /infrastructure, /cli, /tests, and /features folders. Ensure /domain is for domain logic, /infrastructure for API clients and utilities, /cli for CLI entrypoint, /tests for unit tests, and /features for Behave scenarios.
+
+## 3. Configure Dependency Management with Poetry [done]
+### Dependencies: None
+### Description: Set up pyproject.toml using Poetry for dependency management and Python version specification.
+### Details:
+Initialize Poetry in the project root, specify Python 3.11+ in pyproject.toml, and add initial dependencies as needed. Ensure pyproject.toml is present and correctly configured.
+
+## 4. Add Project Documentation and Metadata Files [done]
+### Dependencies: None
+### Description: Create README.md and ensure project metadata files are present.
+### Details:
+Write a README.md describing the project, architecture, and setup instructions. Ensure .gitignore and pyproject.toml are included in the repository.
+
+## 5. Validate Initial Importability and Test Runner Setup [done]
+### Dependencies: None
+### Description: Ensure all modules are importable and set up an initial test runner.
+### Details:
+Add __init__.py files as needed. Set up a basic test runner (e.g., pytest) in /tests. Confirm that all modules in /domain, /infrastructure, and /cli can be imported without errors.
+
