@@ -1,0 +1,435 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Initialize Project Repository and Screaming Architecture",
+        "description": "Create the project repository with a Screaming Architecture folder structure, separating domain logic from infrastructure details.",
+        "details": "Use Python 3.11+ for best async support. Structure folders as /domain, /infrastructure, /cli, /tests, /features. Add pyproject.toml for dependency management (prefer Poetry). Include .gitignore and README.md. Follow Screaming Architecture principles: domain objects and logic in /domain, API clients in /infrastructure, CLI entrypoint in /cli.",
+        "testStrategy": "Verify folder structure matches Screaming Architecture. Ensure all modules are importable and initial test runner executes.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Project Repository and Initialize Git",
+            "description": "Set up a new project repository and initialize it with Git version control.",
+            "dependencies": [],
+            "details": "Create a new directory for the project, initialize Git, and set up the initial commit. Add a .gitignore file tailored for Python projects.",
+            "status": "pending",
+            "testStrategy": "Verify that the repository is initialized, .gitignore is present, and Git status shows a clean working tree."
+          },
+          {
+            "id": 2,
+            "title": "Establish Screaming Architecture Folder Structure",
+            "description": "Create the required folder structure following Screaming Architecture principles.",
+            "dependencies": [],
+            "details": "Add /domain, /infrastructure, /cli, /tests, and /features folders. Ensure /domain is for domain logic, /infrastructure for API clients and utilities, /cli for CLI entrypoint, /tests for unit tests, and /features for Behave scenarios.",
+            "status": "pending",
+            "testStrategy": "Check that all folders exist and match the prescribed structure. Confirm that each folder is empty or contains a placeholder __init__.py."
+          },
+          {
+            "id": 3,
+            "title": "Configure Dependency Management with Poetry",
+            "description": "Set up pyproject.toml using Poetry for dependency management and Python version specification.",
+            "dependencies": [],
+            "details": "Initialize Poetry in the project root, specify Python 3.11+ in pyproject.toml, and add initial dependencies as needed. Ensure pyproject.toml is present and correctly configured.",
+            "status": "pending",
+            "testStrategy": "Run 'poetry install' to verify dependencies are installed and Python version is enforced."
+          },
+          {
+            "id": 4,
+            "title": "Add Project Documentation and Metadata Files",
+            "description": "Create README.md and ensure project metadata files are present.",
+            "dependencies": [],
+            "details": "Write a README.md describing the project, architecture, and setup instructions. Ensure .gitignore and pyproject.toml are included in the repository.",
+            "status": "pending",
+            "testStrategy": "Verify README.md is informative and all metadata files are present in the repository root."
+          },
+          {
+            "id": 5,
+            "title": "Validate Initial Importability and Test Runner Setup",
+            "description": "Ensure all modules are importable and set up an initial test runner.",
+            "dependencies": [],
+            "details": "Add __init__.py files as needed. Set up a basic test runner (e.g., pytest) in /tests. Confirm that all modules in /domain, /infrastructure, and /cli can be imported without errors.",
+            "status": "pending",
+            "testStrategy": "Run the test runner to confirm it executes and imports all modules successfully."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Implement CLI Entry Point with Click",
+        "description": "Develop the CLI interface using Click, supporting the 'process' verb and all required options.",
+        "details": "Use Click v8.1+ for robust CLI parsing. Implement 'process' command with options: --project, --out, --pat, --log-level, --skip-metrics, --version, --help. Ensure auto-generated help text matches PRD. Place CLI code in /cli/cli.py.",
+        "testStrategy": "Write Behave scenarios for CLI invocation. Unit test CLI parsing and option handling.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set Up CLI Project Structure",
+            "description": "Create the /cli/cli.py file and initialize the CLI entry point using Click v8.1+.",
+            "dependencies": [],
+            "details": "Ensure the CLI code is placed in /cli/cli.py and the project is ready for further CLI command implementation.",
+            "status": "pending",
+            "testStrategy": "Verify that the CLI entry point runs without errors and displays a basic help message."
+          },
+          {
+            "id": 2,
+            "title": "Implement 'process' Command with Required Options",
+            "description": "Develop the 'process' command in Click, supporting options: --project, --out, --pat, --log-level, --skip-metrics.",
+            "dependencies": [
+              1
+            ],
+            "details": "Define the 'process' command and all required options, ensuring correct parsing and validation.",
+            "status": "pending",
+            "testStrategy": "Unit test option parsing and validation for all supported flags."
+          },
+          {
+            "id": 3,
+            "title": "Add Global Options and Version/Help Support",
+            "description": "Integrate --version and --help options, ensuring auto-generated help text matches PRD requirements.",
+            "dependencies": [
+              2
+            ],
+            "details": "Configure Click to provide global options and ensure help/version output is accurate and user-friendly.",
+            "status": "pending",
+            "testStrategy": "Compare CLI help and version output against PRD; write Behave scenarios for help/version invocation."
+          },
+          {
+            "id": 4,
+            "title": "Validate Option Handling and Error Messaging",
+            "description": "Implement robust error handling for missing or invalid options, providing clear user feedback.",
+            "dependencies": [
+              3
+            ],
+            "details": "Ensure CLI responds with appropriate error messages for invalid input and missing required options.",
+            "status": "pending",
+            "testStrategy": "Unit test error cases and verify error messages match PRD expectations."
+          },
+          {
+            "id": 5,
+            "title": "Integrate CLI with Behave and Unit Tests",
+            "description": "Write Behave scenarios and unit tests to validate CLI invocation, option handling, and output structure.",
+            "dependencies": [
+              4
+            ],
+            "details": "Ensure comprehensive test coverage for CLI behaviors, including all supported options and error cases.",
+            "status": "pending",
+            "testStrategy": "Implement Behave scenarios for CLI usage; write unit tests for option parsing and output."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Implement Authentication Logic",
+        "description": "Support DefaultAzureCredential chain and PAT override for Azure DevOps and OData APIs.",
+        "details": "Use azure-identity==1.14.0 for DefaultAzureCredential. Accept --pat and use for BasicAuth. Implement credential precedence logic. Ensure compatibility with both REST and OData endpoints. Place authentication logic in /infrastructure/auth.py.",
+        "testStrategy": "Behave scenarios for both Azure environment and PAT fallback. Mock credential failures and verify error messaging.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement Structured JSON Logging",
+        "description": "Add structured logging per Better Stack guidance, supporting info/debug/trace levels and JSON output.",
+        "details": "Use structlog==23.2.0 for JSON logging. No root logger; configure per module. Support --log-level option. Include timestamps, levels, and trace context. Output logs to stdout and optionally to file. Place logging config in /infrastructure/logging.py.",
+        "testStrategy": "Unit test log output format. Behave scenarios for log-level switching. Validate logs are JSON and contain required fields.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Resilient Async HTTP Client",
+        "description": "Develop an async HTTP client with exponential backoff for 429/503, supporting up to 10 concurrent requests.",
+        "details": "Use httpx==0.27.0 with asyncio for concurrency. Integrate tenacity==8.2.2 for exponential backoff. Limit concurrency with asyncio.Semaphore(10). Centralize error handling for 429/503. Place client in /infrastructure/http_client.py.",
+        "testStrategy": "Unit test retry logic and concurrency limits. Behave scenarios for simulated transient failures.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Async HTTP Client Interface",
+            "description": "Define the interface and structure for the async HTTP client, specifying methods for GET, POST, and error handling.",
+            "dependencies": [],
+            "details": "Create a class in /infrastructure/http_client.py with async methods for HTTP operations. Ensure extensibility for future features.",
+            "status": "pending",
+            "testStrategy": "Unit test method signatures and basic instantiation."
+          },
+          {
+            "id": 2,
+            "title": "Integrate httpx with Asyncio Concurrency Control",
+            "description": "Implement async HTTP requests using httpx==0.27.0, managing concurrency with asyncio.Semaphore(10).",
+            "dependencies": [
+              1
+            ],
+            "details": "Use asyncio.Semaphore to restrict concurrent requests to 10. Ensure all requests are performed asynchronously.",
+            "status": "pending",
+            "testStrategy": "Unit test concurrency limits by simulating multiple simultaneous requests."
+          },
+          {
+            "id": 3,
+            "title": "Implement Exponential Backoff for 429/503 Responses",
+            "description": "Integrate tenacity==8.2.2 to apply exponential backoff retries for HTTP 429 and 503 errors.",
+            "dependencies": [
+              2
+            ],
+            "details": "Configure tenacity retry logic to trigger on 429/503 responses, with customizable backoff parameters.",
+            "status": "pending",
+            "testStrategy": "Unit test retry behavior using mocked 429/503 responses."
+          },
+          {
+            "id": 4,
+            "title": "Centralize Error Handling for Transient Failures",
+            "description": "Develop centralized error handling logic for 429/503 responses and other transient errors within the client.",
+            "dependencies": [
+              3
+            ],
+            "details": "Create a unified error handling mechanism to log, retry, and escalate errors as needed.",
+            "status": "pending",
+            "testStrategy": "Unit test error handling paths and ensure correct logging and retry escalation."
+          },
+          {
+            "id": 5,
+            "title": "Finalize Client Implementation and Documentation",
+            "description": "Refactor, document, and ensure the client is production-ready in /infrastructure/http_client.py.",
+            "dependencies": [
+              4
+            ],
+            "details": "Add docstrings, usage examples, and finalize code structure. Ensure compliance with project standards.",
+            "status": "pending",
+            "testStrategy": "Code review, documentation validation, and integration tests with simulated failures."
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Fetch Project Metadata from Azure DevOps REST APIs",
+        "description": "Implement logic to fetch work-item types, fields, behaviors, teams, backlogs, and team settings for a given project.",
+        "details": "Use azure-devops==7.1.0 or direct REST calls via httpx. Endpoints: /wit/workitemtypes, /wit/fields, /processes/{id}/behaviors, /core/teams, /work/backlogs, /work/teamsettings. Serialize results into domain objects. Place logic in /domain/metadata.py.",
+        "testStrategy": "Behave scenarios for each endpoint. Unit test response parsing and error handling.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Fetch Activity Metrics via OData Analytics v4",
+        "description": "Query OData Analytics endpoints for monthly aggregates of work items, PRs, and pipeline runs.",
+        "details": "Use httpx async client for OData queries. Endpoints: WorkItemsSnapshot, WorkItemRevisions, PullRequestEvents, /pipelines/{id}/runs. Aggregate by month using pandas==2.2.2 for in-memory grouping. Place logic in /domain/metrics.py.",
+        "testStrategy": "Behave scenarios for metrics collection. Unit test aggregation logic and error handling.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Enrich Users via Microsoft Graph API",
+        "description": "Lookup Azure DevOps identities in Microsoft Graph to fetch job title and mail, and annotate usage patterns.",
+        "details": "Use msgraph-core==1.0.0 and httpx for Graph API calls. For each unique user ID, fetch /users/{id}. Annotate users with PR-heavy or work-item-heavy based on metrics. Place enrichment logic in /domain/user_enrichment.py.",
+        "testStrategy": "Behave scenarios for user enrichment. Unit test Graph API integration and annotation logic.",
+        "priority": "medium",
+        "dependencies": [
+          6,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Serialize Domain Objects to JSON with orjson",
+        "description": "Serialize all collected domain objects into a single portable JSON file using orjson.",
+        "details": "Use orjson==3.9.10 for fast serialization. Ensure output matches published schema and is ≤50 MB for typical projects. Place serialization logic in /infrastructure/serialization.py.",
+        "testStrategy": "Unit test serialization for schema compliance and file size. Behave scenario for end-to-end export.",
+        "priority": "high",
+        "dependencies": [
+          6,
+          7,
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement Error Handling and Exit Codes",
+        "description": "Handle errors per PRD: fatal exit for Analytics root unreachable, warnings for partial fetch failures, credential errors.",
+        "details": "Centralize error handling in /cli/cli.py. Map scenarios to exit codes: 0 (success), 1 (partial), 2 (fatal Analytics error). Emit warnings array in JSON output. Log errors with context.",
+        "testStrategy": "Behave scenarios for each error case. Unit test exit code logic and warning emission.",
+        "priority": "high",
+        "dependencies": [
+          6,
+          7,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement --skip-metrics Option",
+        "description": "Support CLI option to export configuration only, skipping all Analytics queries.",
+        "details": "Add --skip-metrics flag to CLI. Bypass metrics collection logic if set. Ensure output JSON omits metrics section when skipped.",
+        "testStrategy": "Behave scenario for --skip-metrics. Unit test output structure.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          6,
+          9,
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Publish and Version JSON Schema",
+        "description": "Publish the JSON schema for the export artefact and version it for downstream consumers.",
+        "details": "Define schema in /infrastructure/schema.json. Use jsonschema==4.22.0 for validation. Publish schema to repository and document versioning strategy.",
+        "testStrategy": "Unit test schema validation. Behave scenario for schema compliance.",
+        "priority": "medium",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Acceptance Test Suite with Behave",
+        "description": "Develop BDD acceptance tests mapping each requirement to Gherkin scenarios, executed against ephemeral Azure DevOps org.",
+        "details": "Use behave==1.2.6 for BDD. Place features in /features. Automate ephemeral org setup in CI using azdo-demo-org. Map each PRD requirement to a scenario.",
+        "testStrategy": "Run Behave suite in CI. Ensure all scenarios pass and failures are logged with rich context.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Extract PRD Requirements for Test Mapping",
+            "description": "Review the Product Requirements Document (PRD) and extract all requirements that need to be mapped to acceptance tests.",
+            "dependencies": [],
+            "details": "Gather and document each PRD requirement to ensure comprehensive coverage in the test suite.",
+            "status": "pending",
+            "testStrategy": "Verify all PRD requirements are listed and none are omitted."
+          },
+          {
+            "id": 2,
+            "title": "Author Gherkin Scenarios for Each Requirement",
+            "description": "Write Gherkin scenarios in .feature files for each PRD requirement, ensuring clarity and traceability.",
+            "dependencies": [
+              1
+            ],
+            "details": "Place all .feature files in the /features directory, with each scenario clearly mapped to its corresponding requirement.",
+            "status": "pending",
+            "testStrategy": "Review scenarios for completeness and direct mapping to requirements; peer review for Gherkin syntax."
+          },
+          {
+            "id": 3,
+            "title": "Implement Behave Step Definitions",
+            "description": "Develop Python step definitions for all Gherkin scenarios using behave==1.2.6.",
+            "dependencies": [
+              2
+            ],
+            "details": "Ensure step definitions are modular, reusable, and placed in the appropriate /features/steps directory.",
+            "status": "pending",
+            "testStrategy": "Unit test step definitions for correctness; ensure all steps are covered and executable."
+          },
+          {
+            "id": 4,
+            "title": "Automate Ephemeral Azure DevOps Org Setup in CI",
+            "description": "Integrate azdo-demo-org into CI to provision and tear down ephemeral Azure DevOps organizations for test execution.",
+            "dependencies": [
+              3
+            ],
+            "details": "Configure CI pipeline to automatically create and destroy orgs for each test run, ensuring isolation and repeatability.",
+            "status": "pending",
+            "testStrategy": "Validate org setup and teardown in CI logs; ensure no residual resources remain post-test."
+          },
+          {
+            "id": 5,
+            "title": "Execute and Validate Behave Suite in CI",
+            "description": "Run the Behave acceptance test suite in CI against the ephemeral Azure DevOps org, capturing and reporting results.",
+            "dependencies": [
+              4
+            ],
+            "details": "Ensure all scenarios are executed, failures are logged with rich context, and results are published as CI artefacts.",
+            "status": "pending",
+            "testStrategy": "Confirm all scenarios pass; verify failure logs contain detailed context; ensure artefacts are accessible."
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "title": "Continuous Integration Setup",
+        "description": "Configure CI pipeline to run tests, Behave acceptance suite, and measure runtime and file size metrics.",
+        "details": "Use GitHub Actions or Azure Pipelines. Steps: lint (ruff), unit tests (pytest), Behave acceptance, runtime/file size checks. Publish logs and artefacts. Place CI config in /.github/workflows/ci.yml.",
+        "testStrategy": "Verify CI runs on PR and main. Ensure artefacts and logs are published. Behave failures block merge.",
+        "priority": "medium",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Documentation and CLI Help Verification",
+        "description": "Document usage, options, error codes, and ensure CLI help matches PRD requirements.",
+        "details": "Update README.md with usage, options, error handling, and schema info. Verify Click auto-generated help matches PRD. Document authentication precedence and troubleshooting.",
+        "testStrategy": "Manual review of documentation. Behave scenario for --help output. Validate README completeness.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          11,
+          12,
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-18T20:14:51.299Z",
+      "updated": "2025-07-18T20:14:51.299Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
