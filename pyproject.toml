@@ -15,9 +15,6 @@ dependencies = [
     "rich>=13.0.0",
     "httpx>=0.24.0",
 ]
-
-[project.scripts]
-azdo-process-export = "azdo_process_export.cli.main:cli"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -30,6 +27,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: System :: Systems Administration",
 ]
+
+[project.scripts]
+azdo-process-export = "azdo_process_export.cli.main:cli"
 
 [project.urls]
 Homepage = "https://github.com/Tiberriver256/azdo-process-export"

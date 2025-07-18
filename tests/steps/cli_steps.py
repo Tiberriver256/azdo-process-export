@@ -9,6 +9,7 @@ import subprocess
 import sys
 import os
 from pathlib import Path
+import shlex
 from behave import given, when, then
 
 
@@ -33,10 +34,10 @@ def step_run_command(context, command):
     # Parse the command
     if command.startswith("azdo-process-export"):
         # Replace the command prefix with our Python module call
-        args = command.split()[1:]  # Remove "azdo-process-export"
+        args = shlex.split(command)[1:]  # Remove "azdo-process-export", preserve quoted args
         full_command = context.cli_command + args
     else:
-        full_command = command.split()
+        full_command = shlex.split(command)
     
     # Prepare environment
     env = os.environ.copy()

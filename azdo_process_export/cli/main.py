@@ -90,7 +90,7 @@ def process(
         sys.exit(1)
     
     # TODO: Import and call the actual export logic from domain layer
-    logger.info("🚧 Export logic not yet implemented")
+    logger.info("Export logic not yet implemented")
     logger.info(f"Would export project '{project_name}' from organization '{organization}' to {out}")
     
     if pat:
@@ -102,7 +102,7 @@ def process(
         logger.info("Skipping Analytics metrics collection")
     
     # Placeholder success
-    console.print("✅ Export would complete successfully!", style="green")
+    console.print("Export would complete successfully!", style="green")
 
 
 if __name__ == "__main__":

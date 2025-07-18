@@ -13,19 +13,13 @@ A single-command Python CLI that dumps every process-relevant facet of an Azure 
 
 ## Quick Start
 
-### Using uv (Recommended)
+
+### Quick Start (uv Only)
 
 Run directly with PEP 723 inline dependencies:
 
 ```bash
 uv run __main__.py process --project "My Project" --out process.json
-```
-
-### Using pip
-
-```bash
-pip install azdo-process-export
-azdo-process-export process --project "My Project" --out process.json
 ```
 
 ## Features
@@ -113,6 +107,45 @@ The tool generates a comprehensive JSON file containing:
   }
 }
 ```
+
+## TDD Workflow for CLI Development
+
+This project uses **Test-Driven Development (TDD)** for CLI features, with full coverage via Behave BDD scenarios and step definitions.
+
+### Workflow Steps
+1. **Write Behave feature scenarios** in `tests/features/cli_basic.feature` for each CLI requirement (help, version, argument validation, error handling, etc).
+2. **Implement failing step definitions** in `tests/steps/cli_steps.py` to drive CLI invocation and output checks.
+3. **Develop CLI code** in `azdo_process_export/cli/main.py` to pass the scenarios, using Click for argument parsing and Rich for output/logging.
+4. **Run tests** with `uv run behave` to verify all scenarios pass. Fix code and tests until green.
+5. **Iterate**: Add new scenarios for each feature or bug fix, and repeat the cycle.
+
+#### Example Scenario
+```feature
+Scenario: Require organization configuration
+  When I run "azdo-process-export process 'Test Project'"
+  Then the exit code should be 1
+  And the output should contain "Organization not specified"
+```
+
+#### Example Step Definition
+```python
+@when('I run "{command}"')
+def step_run_command(context, command):
+    # Uses shlex.split to preserve quoted arguments
+    ...
+```
+
+#### Example CLI Implementation
+```python
+@click.command()
+@click.argument("project_name")
+@click.option("--organization", ...)
+def process(...):
+    if not organization:
+        logger.error("Organization not specified.")
+        sys.exit(1)
+```
+See `tests/features/cli_basic.feature` and `tests/steps/cli_steps.py` for full coverage examples.
 
 ## License
 
