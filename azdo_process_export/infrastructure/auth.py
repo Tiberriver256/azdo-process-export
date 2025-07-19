@@ -24,8 +24,8 @@ def _emit_test_json_log(event_data: dict) -> None:
 
 def _log_auth_success(credential_source: str, headers: dict) -> None:
     """Log successful authentication with structured logging."""
-    # Structured logging
-    logger.info("Authentication success", event="auth_success", credential_source=credential_source)
+    # Structured logging - first parameter is the event message
+    logger.info("Authentication successful", credential_source=credential_source, event_type="auth_success")
 
     # Test-specific JSON logging for Behave compatibility
     _emit_test_json_log({"event": "authentication_success", "credential_source": credential_source})
@@ -36,11 +36,11 @@ def _log_auth_failure(credential_source: str, error: Exception, message: str) ->
     """Log authentication failure with structured logging."""
     logger.error(
         "Authentication failed",
-        event="auth_failure",
-        error=str(error),
         credential_source=credential_source,
+        error=str(error),
         exception=repr(error),
-        message=message,
+        failure_message=message,
+        event_type="auth_failure",
     )
 
     # Test-specific JSON logging for Behave tests

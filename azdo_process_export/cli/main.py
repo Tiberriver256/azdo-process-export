@@ -10,7 +10,7 @@ from pathlib import Path
 import click
 from rich.console import Console
 
-from azdo_process_export.infrastructure.logging import setup_logging, get_logger
+from azdo_process_export.infrastructure.logging import get_logger, setup_logging
 
 console = Console()
 
@@ -116,7 +116,7 @@ def process(project_name: str, out: Path, pat: str | None, skip_metrics: bool, o
         sys.exit(0)
 
     except AuthenticationError as e:
-        logger.error("Authentication failed", error=str(e), event="auth_failure")
+        logger.error("Authentication failed", error=str(e), event_type="auth_failure")
         console.print(f"[red]Authentication failed: {e}[/red]")
         sys.exit(2)
 

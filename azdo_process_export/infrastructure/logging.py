@@ -8,14 +8,14 @@ Supports different log levels (info, debug, trace) and outputs to stdout and opt
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import structlog
 
 
 def setup_logging(
     log_level: str = "info",
-    log_file: Optional[Path] = None,
+    log_file: Path | None = None,
     enable_trace: bool = False
 ) -> None:
     """
@@ -32,9 +32,9 @@ def setup_logging(
         "debug": logging.DEBUG,
         "trace": logging.DEBUG,  # Python logging doesn't have TRACE, use DEBUG
     }
-    
+
     level = level_map.get(log_level.lower(), logging.INFO)
-    
+
     # Configure standard library logging to use stdout
     logging.basicConfig(
         format="%(message)s",
@@ -42,7 +42,7 @@ def setup_logging(
         level=level,
         force=True  # Override any existing configuration
     )
-    
+
     # Configure structlog
     processors = [
         structlog.stdlib.filter_by_level,
@@ -54,14 +54,14 @@ def setup_logging(
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
     ]
-    
+
     # Add trace context processor for trace level
     if enable_trace or log_level.lower() == "trace":
         processors.append(_add_trace_context)
-    
+
     # Use JSON renderer for structured output
     processors.append(structlog.processors.JSONRenderer())
-    
+
     structlog.configure(
         processors=processors,
         wrapper_class=structlog.stdlib.BoundLogger,
@@ -69,7 +69,7 @@ def setup_logging(
         context_class=dict,
         cache_logger_on_first_use=True,
     )
-    
+
     # Configure file logging if specified
     if log_file:
         _setup_file_logging(log_file, level)
@@ -77,14 +77,14 @@ def setup_logging(
 
 def _add_trace_context(logger: Any, name: str, event_dict: dict) -> dict:
     """Add trace context information to log entries."""
-    import traceback
     import threading
-    
+    import traceback
+
     event_dict["trace"] = {
         "thread_id": threading.get_ident(),
         "thread_name": threading.current_thread().name,
     }
-    
+
     # Add stack trace for debug/trace levels
     if event_dict.get("level") in ("debug", "trace"):
         stack = traceback.extract_stack()
@@ -94,14 +94,14 @@ def _add_trace_context(logger: Any, name: str, event_dict: dict) -> dict:
             if not any(skip in frame.filename for skip in ["logging", "structlog"]):
                 caller_frame = frame
                 break
-        
+
         if caller_frame:
             event_dict["trace"]["caller"] = {
                 "filename": caller_frame.filename,
                 "line": caller_frame.lineno,
                 "function": caller_frame.name,
             }
-    
+
     return event_dict
 
 
@@ -109,12 +109,12 @@ def _setup_file_logging(log_file: Path, level: int) -> None:
     """Setup file logging handler."""
     # Ensure directory exists
     log_file.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Add file handler to root logger
     file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(level)
     file_handler.setFormatter(logging.Formatter("%(message)s"))
-    
+
     logging.getLogger().addHandler(file_handler)
 
 

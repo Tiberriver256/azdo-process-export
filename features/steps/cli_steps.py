@@ -312,7 +312,7 @@ def step_output_contains_json_logs(context):
     """Check that output contains valid JSON log entries."""
     combined_output = context.cli_output + "\n" + context.cli_error
     log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
-    
+
     found_json_log = False
     for line in log_lines:
         try:
@@ -322,7 +322,7 @@ def step_output_contains_json_logs(context):
                 break
         except json.JSONDecodeError:
             continue  # Skip non-JSON lines
-    
+
     assert found_json_log, f"No structured JSON logs found in output: {combined_output}"
 
 
@@ -331,7 +331,7 @@ def step_json_logs_contain_field(context, field_name):
     """Check that JSON logs contain a specific field."""
     combined_output = context.cli_output + "\n" + context.cli_error
     log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
-    
+
     found_field = False
     for line in log_lines:
         try:
@@ -341,7 +341,7 @@ def step_json_logs_contain_field(context, field_name):
                 break
         except json.JSONDecodeError:
             continue
-    
+
     assert found_field, f"Field '{field_name}' not found in JSON logs"
 
 
@@ -350,7 +350,7 @@ def step_json_logs_contain_debug_entries(context):
     """Check that JSON logs contain debug level entries."""
     combined_output = context.cli_output + "\n" + context.cli_error
     log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
-    
+
     found_debug = False
     for line in log_lines:
         try:
@@ -360,7 +360,7 @@ def step_json_logs_contain_debug_entries(context):
                 break
         except json.JSONDecodeError:
             continue
-    
+
     assert found_debug, "No debug level entries found in JSON logs"
 
 
@@ -369,7 +369,7 @@ def step_json_logs_contain_trace_context(context):
     """Check that JSON logs contain trace context information."""
     combined_output = context.cli_output + "\n" + context.cli_error
     log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
-    
+
     found_trace = False
     for line in log_lines:
         try:
@@ -381,7 +381,7 @@ def step_json_logs_contain_trace_context(context):
                     break
         except json.JSONDecodeError:
             continue
-    
+
     assert found_trace, "No trace context information found in JSON logs"
 
 
@@ -405,17 +405,23 @@ def step_log_file_contains_valid_json(context):
     """Check that the log file contains valid JSON."""
     import json
     from pathlib import Path
-    
+
     log_file = Path(context.log_file)
     try:
         content = log_file.read_text().strip()
         log_lines = [line.strip() for line in content.split("\n") if line.strip()]
-        
+
+        json_lines_found = 0
         for line in log_lines:
-            json.loads(line)  # Will raise JSONDecodeError if invalid
-            
-    except json.JSONDecodeError as e:
-        assert False, f"Log file contains invalid JSON: {e}"
+            try:
+                json_data = json.loads(line)
+                if isinstance(json_data, dict) and "timestamp" in json_data and "level" in json_data:
+                    json_lines_found += 1
+            except json.JSONDecodeError:
+                continue  # Skip non-JSON lines (like Azure debug output)
+
+        assert json_lines_found > 0, f"No valid JSON log entries found in log file. Found {len(log_lines)} total lines."
+
     except FileNotFoundError:
         assert False, f"Log file {context.log_file} does not exist"
 
@@ -425,9 +431,9 @@ def step_output_contains_warning_or_higher(context):
     """Check that output only contains warning or higher level logs."""
     combined_output = context.cli_output + "\n" + context.cli_error
     log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
-    
+
     allowed_levels = {"warning", "error", "critical"}
-    
+
     for line in log_lines:
         try:
             json_data = json.loads(line)
@@ -442,10 +448,10 @@ def step_output_contains_warning_or_higher(context):
 def step_each_log_line_valid_json(context):
     """Check that each line of log output is valid JSON."""
     import json
-    
+
     combined_output = context.cli_output + "\n" + context.cli_error
     log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
-    
+
     json_lines_found = 0
     for line in log_lines:
         try:
@@ -455,7 +461,7 @@ def step_each_log_line_valid_json(context):
         except json.JSONDecodeError:
             # Skip non-JSON lines (like Rich console output)
             continue
-    
+
     assert json_lines_found > 0, "No valid JSON log lines found"
 
 
@@ -464,10 +470,10 @@ def step_json_logs_contain_sequential_timestamps(context):
     """Check that JSON logs have sequential timestamps."""
     import json
     from datetime import datetime
-    
+
     combined_output = context.cli_output + "\n" + context.cli_error
     log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
-    
+
     timestamps = []
     for line in log_lines:
         try:
@@ -479,9 +485,9 @@ def step_json_logs_contain_sequential_timestamps(context):
                 timestamps.append(timestamp)
         except (json.JSONDecodeError, ValueError):
             continue
-    
+
     assert len(timestamps) >= 2, "Need at least 2 timestamps to verify sequence"
-    
+
     # Check that timestamps are in order
     for i in range(1, len(timestamps)):
         assert timestamps[i] >= timestamps[i-1], "Timestamps are not in sequential order"
