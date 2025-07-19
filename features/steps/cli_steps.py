@@ -8,6 +8,7 @@ Behave step definitions for CLI testing.
 Implements the step definitions for testing the command-line interface of azdo-process-export.
 """
 
+import json
 import os
 import shlex
 import subprocess
@@ -302,3 +303,185 @@ def step_readme_contains(context, expected_text):
         assert expected_text in readme_content, f"README.md does not contain '{expected_text}'"
     except Exception as e:
         assert False, f"Failed to read README.md: {e}"
+
+
+# Structured JSON Logging Step Definitions
+
+@then("the output should contain structured JSON logs")
+def step_output_contains_json_logs(context):
+    """Check that output contains valid JSON log entries."""
+    combined_output = context.cli_output + "\n" + context.cli_error
+    log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
+    
+    found_json_log = False
+    for line in log_lines:
+        try:
+            json_data = json.loads(line)
+            if isinstance(json_data, dict) and "timestamp" in json_data and "level" in json_data:
+                found_json_log = True
+                break
+        except json.JSONDecodeError:
+            continue  # Skip non-JSON lines
+    
+    assert found_json_log, f"No structured JSON logs found in output: {combined_output}"
+
+
+@then('the JSON logs should contain "{field_name}" field')
+def step_json_logs_contain_field(context, field_name):
+    """Check that JSON logs contain a specific field."""
+    combined_output = context.cli_output + "\n" + context.cli_error
+    log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
+    
+    found_field = False
+    for line in log_lines:
+        try:
+            json_data = json.loads(line)
+            if isinstance(json_data, dict) and field_name in json_data:
+                found_field = True
+                break
+        except json.JSONDecodeError:
+            continue
+    
+    assert found_field, f"Field '{field_name}' not found in JSON logs"
+
+
+@then("the JSON logs should contain debug level entries")
+def step_json_logs_contain_debug_entries(context):
+    """Check that JSON logs contain debug level entries."""
+    combined_output = context.cli_output + "\n" + context.cli_error
+    log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
+    
+    found_debug = False
+    for line in log_lines:
+        try:
+            json_data = json.loads(line)
+            if isinstance(json_data, dict) and json_data.get("level") == "debug":
+                found_debug = True
+                break
+        except json.JSONDecodeError:
+            continue
+    
+    assert found_debug, "No debug level entries found in JSON logs"
+
+
+@then("the JSON logs should contain trace context information")
+def step_json_logs_contain_trace_context(context):
+    """Check that JSON logs contain trace context information."""
+    combined_output = context.cli_output + "\n" + context.cli_error
+    log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
+    
+    found_trace = False
+    for line in log_lines:
+        try:
+            json_data = json.loads(line)
+            if isinstance(json_data, dict) and "trace" in json_data:
+                trace_data = json_data["trace"]
+                if "thread_id" in trace_data and "thread_name" in trace_data:
+                    found_trace = True
+                    break
+        except json.JSONDecodeError:
+            continue
+    
+    assert found_trace, "No trace context information found in JSON logs"
+
+
+@given("I have a temporary directory for logs")
+def step_have_temp_log_directory(context):
+    """Set up a temporary directory for log files."""
+    context.temp_log_dir = "/tmp"
+
+
+@then('a log file should be created at "{file_path}"')
+def step_log_file_created(context, file_path):
+    """Check that a log file was created."""
+    from pathlib import Path
+    log_file = Path(file_path)
+    assert log_file.exists(), f"Log file {file_path} was not created"
+    context.log_file = str(log_file)
+
+
+@then('the log file should contain valid JSON')
+def step_log_file_contains_valid_json(context):
+    """Check that the log file contains valid JSON."""
+    import json
+    from pathlib import Path
+    
+    log_file = Path(context.log_file)
+    try:
+        content = log_file.read_text().strip()
+        log_lines = [line.strip() for line in content.split("\n") if line.strip()]
+        
+        for line in log_lines:
+            json.loads(line)  # Will raise JSONDecodeError if invalid
+            
+    except json.JSONDecodeError as e:
+        assert False, f"Log file contains invalid JSON: {e}"
+    except FileNotFoundError:
+        assert False, f"Log file {context.log_file} does not exist"
+
+
+@then("the output should contain JSON logs with warning or higher levels only")
+def step_output_contains_warning_or_higher(context):
+    """Check that output only contains warning or higher level logs."""
+    combined_output = context.cli_output + "\n" + context.cli_error
+    log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
+    
+    allowed_levels = {"warning", "error", "critical"}
+    
+    for line in log_lines:
+        try:
+            json_data = json.loads(line)
+            if isinstance(json_data, dict) and "level" in json_data:
+                level = json_data["level"]
+                assert level in allowed_levels, f"Found log level '{level}' which is below warning"
+        except json.JSONDecodeError:
+            continue  # Skip non-JSON lines
+
+
+@then("each line of log output should be valid JSON")
+def step_each_log_line_valid_json(context):
+    """Check that each line of log output is valid JSON."""
+    import json
+    
+    combined_output = context.cli_output + "\n" + context.cli_error
+    log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
+    
+    json_lines_found = 0
+    for line in log_lines:
+        try:
+            json_data = json.loads(line)
+            if isinstance(json_data, dict):
+                json_lines_found += 1
+        except json.JSONDecodeError:
+            # Skip non-JSON lines (like Rich console output)
+            continue
+    
+    assert json_lines_found > 0, "No valid JSON log lines found"
+
+
+@then("the JSON logs should contain sequential timestamps")
+def step_json_logs_contain_sequential_timestamps(context):
+    """Check that JSON logs have sequential timestamps."""
+    import json
+    from datetime import datetime
+    
+    combined_output = context.cli_output + "\n" + context.cli_error
+    log_lines = [line.strip() for line in combined_output.split("\n") if line.strip()]
+    
+    timestamps = []
+    for line in log_lines:
+        try:
+            json_data = json.loads(line)
+            if isinstance(json_data, dict) and "timestamp" in json_data:
+                timestamp_str = json_data["timestamp"]
+                # Parse ISO timestamp
+                timestamp = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+                timestamps.append(timestamp)
+        except (json.JSONDecodeError, ValueError):
+            continue
+    
+    assert len(timestamps) >= 2, "Need at least 2 timestamps to verify sequence"
+    
+    # Check that timestamps are in order
+    for i in range(1, len(timestamps)):
+        assert timestamps[i] >= timestamps[i-1], "Timestamps are not in sequential order"

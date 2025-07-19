@@ -127,6 +127,7 @@ dependencies = [
     { name = "msgraph-core" },
     { name = "orjson" },
     { name = "rich" },
+    { name = "structlog" },
 ]
 
 [package.dev-dependencies]
@@ -153,6 +154,7 @@ requires-dist = [
     { name = "msgraph-core", specifier = ">=1.0.0" },
     { name = "orjson", specifier = ">=3.9.0" },
     { name = "rich", specifier = ">=13.0.0" },
+    { name = "structlog", specifier = "==23.2.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -1701,6 +1703,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/74/cc/f3d2e47d2fe828da95321ab0f4ac54e4a02294c86832469de33a048f6061/std_uritemplate-2.0.5.tar.gz", hash = "sha256:7703a886cce59d155c21b5acf1ad8d48db9f3322de98fa783a8396fbf35cbc06", size = 6015, upload-time = "2025-05-14T13:10:36.139Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7e/21/479d27b4597c6bf278e794ccceae40f721bc1cb0ff66a30ecb9bfb61ac9a/std_uritemplate-2.0.5-py3-none-any.whl", hash = "sha256:0f5184f8e6f315a01f92cfbed335f62f087e453e79cd586b67a724211e686c28", size = 6509, upload-time = "2025-05-14T13:10:34.983Z" },
+]
+
+[[package]]
+name = "structlog"
+version = "23.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/99/4c/67e8cc235bbeb0a87053739c4c9d0619e3f284730ebdb2b34349488d9e8a/structlog-23.2.0.tar.gz", hash = "sha256:334666b94707f89dbc4c81a22a8ccd34449f0201d5b1ee097a030b577fa8c858", size = 749288, upload-time = "2023-10-09T14:56:18.602Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fc/26/0f5f842dea4e93e28f7d4ed020021cf41ebd79572a06f12e273c8eac4db9/structlog-23.2.0-py3-none-any.whl", hash = "sha256:16a167e87b9fa7fae9a972d5d12805ef90e04857a93eba479d4be3801a6a1482", size = 62875, upload-time = "2023-10-09T14:56:16.76Z" },
 ]
 
 [[package]]
