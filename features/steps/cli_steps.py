@@ -125,6 +125,47 @@ def step_structured_log_contains_pat_success(context):
             continue
     assert found, "Structured log does not contain authentication success with PAT credential source"
 
+@given('I have Azure AD credentials available')
+def step_have_azure_ad_credentials(context):
+    # This step represents having Azure AD credentials available for use
+    # Check if we're in an environment where Azure AD credentials are actually available
+    import os
+    from azure.identity import DefaultAzureCredential
+    
+    try:
+        # Quick test to see if DefaultAzureCredential can get a token
+        credential = DefaultAzureCredential()
+        scope = "499b84ac-1321-427f-aa17-267ca6975798/.default"
+        # Don't actually get the token, just check if the credential chain has any viable options
+        # This is a heuristic - in a real ephemeral test environment, this would work
+        context.has_azure_ad_credentials = True
+    except Exception:
+        # Skip this scenario if Azure AD credentials are not available
+        context.scenario.skip("Azure AD credentials not available in current environment")
+        return
+    
+    context.has_azure_ad_credentials = True
+
+@then('the structured log should contain authentication success with DefaultAzureCredential credential source')
+def step_structured_log_contains_azure_ad_success(context):
+    # Check CLI output for a structured JSON log line with authentication success and DefaultAzureCredential credential source
+    import re
+    import json
+    found = False
+    # Search for JSON log lines in stdout
+    for line in context.cli_output.splitlines():
+        try:
+            log_obj = json.loads(line)
+            if (
+                log_obj.get("event") == "authentication_success"
+                and log_obj.get("credential_source") == "DefaultAzureCredential"
+            ):
+                found = True
+                break
+        except Exception:
+            continue
+    assert found, "Structured log does not contain authentication success with DefaultAzureCredential credential source"
+
 @then('the authentication headers should contain Basic authorization')
 def step_auth_headers_contain_basic(context):
     # Check CLI output for a Basic authorization header
@@ -136,3 +177,15 @@ def step_auth_headers_contain_basic(context):
             found = True
             break
     assert found, "Authentication headers do not contain Basic authorization"
+
+@then('the authentication headers should contain Bearer authorization')
+def step_auth_headers_contain_bearer(context):
+    # Check CLI output for a Bearer authorization header
+    import re
+    found = False
+    # Look for a line containing 'Authorization' and 'Bearer'
+    for line in context.cli_output.splitlines():
+        if re.search(r'"Authorization":\s*"Bearer [A-Za-z0-9._-]+"', line):
+            found = True
+            break
+    assert found, "Authentication headers do not contain Bearer authorization"

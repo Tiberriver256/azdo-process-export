@@ -13,3 +13,11 @@ Feature: Authentication Methods
         Then the exit code should be 0
         And the structured log should contain authentication success with PAT credential source
         And the authentication headers should contain Basic authorization
+
+    Scenario: Authenticate using DefaultAzureCredential when no PAT provided
+        Given I have Azure AD credentials available
+        And the environment variable "AZDO_ORGANIZATION" is set to "test-org"
+        When I run "azdo-process-export process 'Test Project'"
+        Then the exit code should be 0
+        And the structured log should contain authentication success with DefaultAzureCredential credential source
+        And the authentication headers should contain Bearer authorization

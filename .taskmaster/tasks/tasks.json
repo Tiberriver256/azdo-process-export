@@ -182,7 +182,7 @@
             "title": "Scenario 2: Write failing test for DefaultAzureCredential fallback",
             "description": "Create a Behave scenario testing DefaultAzureCredential fallback when no PAT is provided and verify it fails initially.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               3
             ],
@@ -193,7 +193,7 @@
             "title": "Implement 2: Make DefaultAzureCredential scenario pass",
             "description": "Implement DefaultAzureCredential fallback with correct Azure DevOps token scope to make the scenario pass.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               4
             ],
@@ -204,7 +204,7 @@
             "title": "Refactor 2: Clean up DefaultAzureCredential implementation",
             "description": "Refactor DefaultAzureCredential implementation for better structure while keeping tests green.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               5
             ],
@@ -1097,7 +1097,7 @@
     ],
     "metadata": {
       "created": "2025-07-18T20:14:51.299Z",
-      "updated": "2025-07-19T00:59:17.786Z",
+      "updated": "2025-07-19T01:32:09.243Z",
       "description": "Tasks for master context"
     }
   }
