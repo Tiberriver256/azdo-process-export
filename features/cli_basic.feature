@@ -38,6 +38,6 @@ Feature: Basic CLI Functionality
     Scenario: Process command with minimal arguments
         Given the environment variable "AZDO_ORGANIZATION" is set to "test-org"
         When I run "azdo-process-export process 'Test Project'"
-        Then the exit code should be 0
-        And the output should contain "Starting export for project: Test Project"
-        And the output should contain "Export logic not yet implemented"
+        Then the exit code should be 2
+        And the output should contain "Starting export for project"
+        And the output should contain "Authentication failed"

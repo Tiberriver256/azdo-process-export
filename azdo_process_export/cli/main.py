@@ -4,24 +4,15 @@ Azure DevOps Process Export CLI
 Main command-line interface using Click for the azdo-process-export tool.
 """
 
-import logging
 import sys
 from pathlib import Path
 
 import click
 from rich.console import Console
-from rich.logging import RichHandler
+
+from azdo_process_export.infrastructure.logging import get_logger, setup_logging
 
 console = Console()
-
-
-def setup_logging(log_level: str) -> None:
-    """Configure structured logging with Rich output."""
-    level = getattr(logging, log_level.upper(), logging.INFO)
-
-    logging.basicConfig(
-        level=level, format="%(message)s", datefmt="[%X]", handlers=[RichHandler(console=console, rich_tracebacks=True)]
-    )
 
 
 @click.group()
@@ -31,8 +22,13 @@ def setup_logging(log_level: str) -> None:
     default="info",
     help="Set logging level",
 )
+@click.option(
+    "--log-file",
+    type=click.Path(path_type=Path),
+    help="Optional log file path for structured JSON logs",
+)
 @click.version_option(version="0.1.0", prog_name="azdo-process-export")
-def cli(log_level: str) -> None:
+def cli(log_level: str, log_file: Path | None) -> None:
     """Azure DevOps process export tool.
 
     Captures complete project configuration and activity trends in portable JSON format.
@@ -53,7 +49,11 @@ def cli(log_level: str) -> None:
     Required Configuration:
         AZDO_ORGANIZATION environment variable or --organization flag
     """
-    setup_logging(log_level)
+    setup_logging(
+        log_level=log_level,
+        log_file=log_file,
+        enable_trace=(log_level.lower() == "trace")
+    )
 
 
 @cli.command()
@@ -83,11 +83,12 @@ def process(project_name: str, out: Path, pat: str | None, skip_metrics: bool, o
         • For PAT: Verify token has required scopes (Work Items: Read, Analytics: Read)
         • Check structured logs for detailed error information
     """
-    logger = logging.getLogger(__name__)
-    logger.info(f"Starting export for project: [bold]{project_name}[/bold]", extra={"markup": True})
+    logger = get_logger(__name__)
+    logger.info("Starting export for project", project=project_name)
 
     if not organization:
-        logger.error("Organization not specified. Use --organization or set AZDO_ORGANIZATION environment variable.")
+        logger.error("Organization not specified", error="missing_organization")
+        console.print("[red]Organization not specified. Use --organization or set AZDO_ORGANIZATION environment variable.[/red]")
         sys.exit(1)
 
     # Import authentication logic
@@ -96,22 +97,26 @@ def process(project_name: str, out: Path, pat: str | None, skip_metrics: bool, o
     try:
         auth_headers, credential_source = get_credentials(pat)
 
-        logger.info("Authentication headers generated", extra={"credential_source": credential_source})
+        logger.info("Authentication headers generated", credential_source=credential_source)
 
         # Simulate using the headers for an API call (actual export logic not yet implemented)
         logger.info(
-            f"Would export project '{project_name}' from organization '{organization}' to {out}",
-            extra={"credential_source": credential_source},
+            "Export operation started",
+            project=project_name,
+            organization=organization,
+            output_file=str(out),
+            credential_source=credential_source,
+            skip_metrics=skip_metrics
         )
 
         if skip_metrics:
-            logger.info("Skipping Analytics metrics collection")
+            logger.info("Skipping Analytics metrics collection", skip_metrics=True)
 
         console.print("Export would complete successfully!", style="green")
         sys.exit(0)
 
     except AuthenticationError as e:
-        logger.exception(f"Authentication failed: {e}", extra={"event": "auth_failure", "error": str(e)})
+        logger.error("Authentication failed", error=str(e), event_type="auth_failure")
         console.print(f"[red]Authentication failed: {e}[/red]")
         sys.exit(2)
 

@@ -1,11 +1,12 @@
 import base64
 import json
-import logging
 import os
 
 import httpx
 
-logger = logging.getLogger("azdo_auth")
+from azdo_process_export.infrastructure.logging import get_logger
+
+logger = get_logger(__name__)
 
 # Azure DevOps API scope constant
 AZURE_DEVOPS_SCOPE = "499b84ac-1321-427f-aa17-267ca6975798/.default"
@@ -22,11 +23,11 @@ def _emit_test_json_log(event_data: dict) -> None:
 
 
 def _log_auth_success(credential_source: str, headers: dict) -> None:
-    """Log successful authentication with both structured and test logging."""
-    # Structured logging
-    logger.info("Authentication success", extra={"event": "auth_success", "credential_source": credential_source})
+    """Log successful authentication with structured logging."""
+    # Structured logging - first parameter is the event message
+    logger.info("Authentication successful", credential_source=credential_source, event_type="auth_success")
 
-    # Test-specific JSON logging
+    # Test-specific JSON logging for Behave compatibility
     _emit_test_json_log({"event": "authentication_success", "credential_source": credential_source})
     _emit_test_json_log(headers)
 
@@ -34,13 +35,12 @@ def _log_auth_success(credential_source: str, headers: dict) -> None:
 def _log_auth_failure(credential_source: str, error: Exception, message: str) -> None:
     """Log authentication failure with structured logging."""
     logger.error(
-        message,
-        extra={
-            "event": "auth_failure",
-            "error": str(error),
-            "credential_source": credential_source,
-            "exception": repr(error),
-        },
+        "Authentication failed",
+        credential_source=credential_source,
+        error=str(error),
+        exception=repr(error),
+        failure_message=message,
+        event_type="auth_failure",
     )
 
     # Test-specific JSON logging for Behave tests
@@ -76,7 +76,7 @@ def _validate_pat_token(pat: str, headers: dict) -> None:
                 raise AuthenticationError(f"PAT validation failed with status {response.status_code}")
     except httpx.RequestError as e:
         # Network errors during validation - let it pass for now
-        logger.warning(f"Could not validate PAT token due to network error: {e}")
+        logger.warning("Could not validate PAT token due to network error", error=str(e))
 
 
 def _validate_bearer_token(token: str, headers: dict) -> None:
@@ -104,7 +104,7 @@ def _validate_bearer_token(token: str, headers: dict) -> None:
                 raise AuthenticationError(f"Bearer token validation failed with status {response.status_code}")
     except httpx.RequestError as e:
         # Network errors during validation - let it pass for now
-        logger.warning(f"Could not validate Bearer token due to network error: {e}")
+        logger.warning("Could not validate Bearer token due to network error", error=str(e))
 
 
 def _authenticate_with_pat(pat: str) -> tuple[dict, str]:
