@@ -14,6 +14,18 @@ from pathlib import Path
 import shlex
 from behave import given, when, then
 
+def after_scenario(context, scenario):
+    """Clean up after each scenario."""
+    # Restore Azure config if we moved it
+    if hasattr(context, 'azure_config_moved') and context.azure_config_moved:
+        azure_config = Path.home() / '.azure'
+        azure_config_backup = Path.home() / '.azure.backup'
+        if azure_config_backup.exists() and not azure_config.exists():
+            try:
+                azure_config_backup.rename(azure_config)
+            except Exception:
+                pass
+
 @given('I have access to the azdo-process-export CLI')
 def step_have_cli_access(context):
     context.cli_command = [sys.executable, "-m", "azdo_process_export.cli.main"]
@@ -146,6 +158,22 @@ def step_have_azure_ad_credentials(context):
     
     context.has_azure_ad_credentials = True
 
+@given('I have an invalid Personal Access Token')
+def step_have_invalid_pat(context):
+    # This step represents having an invalid PAT - the test will use a clearly invalid token
+    context.has_invalid_pat = True
+
+@given('I have no Azure AD credentials available')
+def step_have_no_azure_ad_credentials(context):
+    # This step represents having no Azure AD credentials available
+    # We'll set a test flag that our auth code can check to simulate no credentials
+    if not hasattr(context, 'env_vars'):
+        context.env_vars = {}
+    
+    # Set a test flag to simulate no Azure AD credentials
+    context.env_vars['TEST_SIMULATE_NO_AZURE_CREDENTIALS'] = 'true'
+    context.has_no_azure_ad_credentials = True
+
 @then('the structured log should contain authentication success with DefaultAzureCredential credential source')
 def step_structured_log_contains_azure_ad_success(context):
     # Check CLI output for a structured JSON log line with authentication success and DefaultAzureCredential credential source
@@ -189,3 +217,51 @@ def step_auth_headers_contain_bearer(context):
             found = True
             break
     assert found, "Authentication headers do not contain Bearer authorization"
+
+@then('the structured log should contain authentication failure with PAT credential source')
+def step_structured_log_contains_pat_failure(context):
+    # Check CLI error output for authentication failure with PAT credential source
+    import json
+    found = False
+    # Search for structured log entries in stderr (where error logs typically go)
+    combined_output = context.cli_output + "\n" + context.cli_error
+    for line in combined_output.splitlines():
+        try:
+            if "auth_failure" in line and "PAT" in line:
+                found = True
+                break
+        except Exception:
+            continue
+    assert found, "Structured log does not contain authentication failure with PAT credential source"
+
+@then('the structured log should contain authentication failure with DefaultAzureCredential credential source')
+def step_structured_log_contains_azure_ad_failure(context):
+    # Check CLI error output for authentication failure with DefaultAzureCredential credential source
+    import json
+    found = False
+    # Search for structured log entries in stderr
+    combined_output = context.cli_output + "\n" + context.cli_error
+    for line in combined_output.splitlines():
+        try:
+            if "auth_failure" in line and "DefaultAzureCredential" in line:
+                found = True
+                break
+        except Exception:
+            continue
+    assert found, "Structured log does not contain authentication failure with DefaultAzureCredential credential source"
+
+@then('the error output should contain "{expected_text}"')
+def step_error_output_contains(context, expected_text):
+    # Check that error output contains expected text
+    combined_output = context.cli_output + "\n" + context.cli_error
+    assert expected_text in combined_output, (
+        f"Expected error output to contain '{expected_text}', but got: {combined_output}"
+    )
+
+@then('the structured log should not contain "{secret_text}"')
+def step_structured_log_should_not_contain_secret(context, secret_text):
+    # Verify that structured logs do not expose secrets
+    combined_output = context.cli_output + "\n" + context.cli_error
+    assert secret_text not in combined_output, (
+        f"Structured log contains secret text '{secret_text}' which should not be exposed"
+    )
