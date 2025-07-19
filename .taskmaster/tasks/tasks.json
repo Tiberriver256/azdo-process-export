@@ -237,7 +237,7 @@
             "title": "Scenario 4: Write failing test for documentation and help",
             "description": "Create a Behave scenario testing credential precedence documentation and troubleshooting and verify it fails initially.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               8
             ],
@@ -248,7 +248,7 @@
             "title": "Implement 4: Make documentation scenario pass and final refactor",
             "description": "Implement documentation updates for README and CLI help to make the scenario pass, then final refactor for production readiness.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               9
             ],
@@ -1097,7 +1097,7 @@
     ],
     "metadata": {
       "created": "2025-07-18T20:14:51.299Z",
-      "updated": "2025-07-19T01:57:58.280Z",
+      "updated": "2025-07-19T13:09:14.443Z",
       "description": "Tasks for master context"
     }
   }

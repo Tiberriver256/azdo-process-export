@@ -14,7 +14,7 @@
 """
 Azure DevOps Process Export Tool
 
-A single-command Python CLI that captures every process-relevant facet of an 
+A single-command Python CLI that captures every process-relevant facet of an
 Azure DevOps project into one comprehensive, portable JSON file.
 
 Usage:

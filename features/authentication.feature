@@ -51,3 +51,28 @@ Feature: Authentication Methods
         Then the exit code should be 0
         And the structured log should not contain "secret-token-12345"
         And the authentication headers should contain Basic authorization
+
+    Scenario: CLI help displays credential precedence information
+        When I run "azdo-process-export --help"
+        Then the exit code should be 0
+        And the output should contain "Authentication Methods:"
+        And the output should contain "DefaultAzureCredential"
+        And the output should contain "Personal Access Token"
+        And the output should contain "credential precedence"
+
+    Scenario: CLI help displays authentication troubleshooting guidance
+        When I run "azdo-process-export process --help"
+        Then the exit code should be 0
+        And the output should contain "Authentication Troubleshooting:"
+        And the output should contain "AZDO_ORGANIZATION"
+        And the output should contain "az login"
+        And the output should contain "exit code 2"
+
+    Scenario: README contains comprehensive authentication documentation
+        Given the README.md file exists
+        Then the README should contain "## Authentication"
+        And the README should contain "Credential Precedence"
+        And the README should contain "DefaultAzureCredential"
+        And the README should contain "Personal Access Token"
+        And the README should contain "Troubleshooting"
+        And the README should contain "AZDO_ORGANIZATION"

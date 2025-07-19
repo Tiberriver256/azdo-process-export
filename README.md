@@ -36,17 +36,33 @@ uv run __main__.py process --project "My Project" --out process.json
 
 ## Authentication
 
-The tool attempts authentication in this order:
-1. **DefaultAzureCredential** (managed identity, Azure CLI, etc.)
-2. **Personal Access Token** via `--pat` flag
+### Credential Precedence
+
+The tool supports two authentication methods with clear precedence:
+
+1. **Personal Access Token (PAT)** - If `--pat` is provided, it takes precedence and is used for Basic Auth. No fallback occurs if PAT fails.
+2. **DefaultAzureCredential** - Used automatically when no PAT is provided. Supports managed identity, Azure CLI (`az login`), Visual Studio, etc.
 
 ```bash
-# Using DefaultAzureCredential (recommended in Azure)
-uv run __main__.py process --project "My Project" --out process.json
+# Using DefaultAzureCredential (recommended in Azure environments)
+export AZDO_ORGANIZATION="your-org"
+uv run __main__.py process "My Project" --out process.json
 
-# Using PAT for local development
-uv run __main__.py process --project "My Project" --pat $AZDO_PAT --out process.json
+# Using PAT for local development or CI/CD
+export AZDO_ORGANIZATION="your-org"
+uv run __main__.py process "My Project" --pat $AZDO_PAT --out process.json
 ```
+
+### Troubleshooting
+
+**Authentication failures (exit code 2):**
+- Ensure `AZDO_ORGANIZATION` environment variable is set
+- For DefaultAzureCredential: Run `az login` or configure managed identity
+- For PAT: Verify token has required scopes (Work Items: Read, Analytics: Read)
+- Check structured logs for detailed error information
+
+**Missing organization (exit code 1):**
+- Set `AZDO_ORGANIZATION` environment variable or use `--organization` flag
 
 ## Development Setup
 

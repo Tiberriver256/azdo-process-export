@@ -7,12 +7,13 @@ independent of infrastructure concerns.
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Dict, List, Optional, Any
 from enum import Enum
+from typing import Any
 
 
 class BugBehavior(str, Enum):
     """Team bug behavior settings."""
+
     AS_REQUIREMENTS = "asRequirements"
     AS_TASKS = "asTasks"
     OFF = "off"
@@ -20,6 +21,7 @@ class BugBehavior(str, Enum):
 
 class WorkItemState(str, Enum):
     """Common work item states."""
+
     NEW = "New"
     ACTIVE = "Active"
     RESOLVED = "Resolved"
@@ -30,23 +32,25 @@ class WorkItemState(str, Enum):
 @dataclass
 class Project:
     """Azure DevOps project information."""
+
     id: str
     name: str
-    description: Optional[str] = None
-    url: Optional[str] = None
-    state: Optional[str] = None
-    revision: Optional[int] = None
-    visibility: Optional[str] = None
+    description: str | None = None
+    url: str | None = None
+    state: str | None = None
+    revision: int | None = None
+    visibility: str | None = None
 
 
 @dataclass
 class WorkItemType:
     """Work item type definition."""
+
     name: str
     ref_name: str
-    description: Optional[str] = None
-    color: Optional[str] = None
-    icon: Optional[str] = None
+    description: str | None = None
+    color: str | None = None
+    icon: str | None = None
     is_disabled: bool = False
     usage_last_12m: int = 0
 
@@ -54,100 +58,108 @@ class WorkItemType:
 @dataclass
 class WorkItemField:
     """Work item field definition."""
+
     ref_name: str
     name: str
     type: str
-    description: Optional[str] = None
-    usage: Optional[str] = None
+    description: str | None = None
+    usage: str | None = None
     read_only: bool = False
     can_sort_by: bool = True
     is_queryable: bool = True
-    supported_operations: List[str] = field(default_factory=list)
+    supported_operations: list[str] = field(default_factory=list)
 
 
 @dataclass
 class ProcessBehavior:
     """Process behavior configuration."""
+
     name: str
     ref_name: str
-    inherits: Optional[str] = None
-    description: Optional[str] = None
+    inherits: str | None = None
+    description: str | None = None
     abstract: bool = False
 
 
 @dataclass
 class TeamMember:
     """Team member information."""
+
     id: str
     display_name: str
     unique_name: str
-    url: Optional[str] = None
-    image_url: Optional[str] = None
+    url: str | None = None
+    image_url: str | None = None
     # Microsoft Graph enrichment
-    aad_id: Optional[str] = None
-    job_title: Optional[str] = None
-    mail: Optional[str] = None
-    role_hint: Optional[str] = None  # "PR-heavy", "work-item-heavy", etc.
+    aad_id: str | None = None
+    job_title: str | None = None
+    mail: str | None = None
+    role_hint: str | None = None  # "PR-heavy", "work-item-heavy", etc.
 
 
 @dataclass
 class TeamSettings:
     """Team configuration settings."""
-    working_days: List[str] = field(default_factory=lambda: ["monday", "tuesday", "wednesday", "thursday", "friday"])
+
+    working_days: list[str] = field(default_factory=lambda: ["monday", "tuesday", "wednesday", "thursday", "friday"])
     bugs_behavior: BugBehavior = BugBehavior.AS_REQUIREMENTS
-    default_iteration: Optional[str] = None
-    default_iteration_macro: Optional[str] = None
-    backlog_iteration: Optional[str] = None
+    default_iteration: str | None = None
+    default_iteration_macro: str | None = None
+    backlog_iteration: str | None = None
 
 
 @dataclass
 class Team:
     """Azure DevOps team."""
+
     id: str
     name: str
-    description: Optional[str] = None
-    url: Optional[str] = None
-    project_id: Optional[str] = None
-    settings: Optional[TeamSettings] = None
-    members: List[TeamMember] = field(default_factory=list)
+    description: str | None = None
+    url: str | None = None
+    project_id: str | None = None
+    settings: TeamSettings | None = None
+    members: list[TeamMember] = field(default_factory=list)
 
 
 @dataclass
 class BacklogLevel:
     """Backlog level configuration."""
+
     id: str
     name: str
     ref_name: str
     rank: int
-    color: Optional[str] = None
-    work_item_types: List[str] = field(default_factory=list)
+    color: str | None = None
+    work_item_types: list[str] = field(default_factory=list)
 
 
 @dataclass
 class Metrics:
     """Activity metrics aggregated by month."""
-    work_items_created_per_month: Dict[str, int] = field(default_factory=dict)
-    work_items_closed_per_month: Dict[str, int] = field(default_factory=dict)
-    work_items_updated_per_month: Dict[str, int] = field(default_factory=dict)
-    prs_created_per_month: Dict[str, int] = field(default_factory=dict)
-    prs_merged_per_month: Dict[str, int] = field(default_factory=dict)
-    pipeline_runs_per_month: Dict[str, int] = field(default_factory=dict)
+
+    work_items_created_per_month: dict[str, int] = field(default_factory=dict)
+    work_items_closed_per_month: dict[str, int] = field(default_factory=dict)
+    work_items_updated_per_month: dict[str, int] = field(default_factory=dict)
+    prs_created_per_month: dict[str, int] = field(default_factory=dict)
+    prs_merged_per_month: dict[str, int] = field(default_factory=dict)
+    pipeline_runs_per_month: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass
 class ProcessExport:
     """Complete process export data model."""
+
     exported_at: datetime
     project: Project
-    work_item_types: List[WorkItemType] = field(default_factory=list)
-    fields: List[WorkItemField] = field(default_factory=list)
-    behaviors: List[ProcessBehavior] = field(default_factory=list)
-    teams: List[Team] = field(default_factory=list)
-    backlog_levels: List[BacklogLevel] = field(default_factory=list)
-    metrics: Optional[Metrics] = None
-    warnings: List[str] = field(default_factory=list)
-    
-    def to_dict(self) -> Dict[str, Any]:
+    work_item_types: list[WorkItemType] = field(default_factory=list)
+    fields: list[WorkItemField] = field(default_factory=list)
+    behaviors: list[ProcessBehavior] = field(default_factory=list)
+    teams: list[Team] = field(default_factory=list)
+    backlog_levels: list[BacklogLevel] = field(default_factory=list)
+    metrics: Metrics | None = None
+    warnings: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "exportedAt": self.exported_at.isoformat(),
@@ -209,7 +221,9 @@ class ProcessExport:
                         "defaultIteration": team.settings.default_iteration if team.settings else None,
                         "defaultIterationMacro": team.settings.default_iteration_macro if team.settings else None,
                         "backlogIteration": team.settings.backlog_iteration if team.settings else None,
-                    } if team.settings else None,
+                    }
+                    if team.settings
+                    else None,
                     "members": [
                         {
                             "id": member.id,
@@ -245,6 +259,8 @@ class ProcessExport:
                 "prsCreatedPerMonth": self.metrics.prs_created_per_month,
                 "prsMergedPerMonth": self.metrics.prs_merged_per_month,
                 "pipelineRunsPerMonth": self.metrics.pipeline_runs_per_month,
-            } if self.metrics else None,
+            }
+            if self.metrics
+            else None,
             "warnings": self.warnings,
         }
