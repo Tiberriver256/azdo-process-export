@@ -160,7 +160,7 @@
             "title": "Implement 1: Make basic PAT authentication scenario pass",
             "description": "Implement minimal PAT authentication in /infrastructure/auth.py to make the basic PAT scenario pass.",
             "details": "<info added on 2025-07-18T22:04:15.523Z>\nMinimal PAT authentication has been implemented in the CLI: the process command now invokes get_auth_headers(pat), logs authentication success or failure, and exits with code 0 on success or 2 on failure. The Behave scenario for PAT authentication is integrated with the CLI logic. Behave was executed, but all scenarios were skipped, likely due to missing or misconfigured tags or step definitions. No code errors were found in the CLI or authentication modules. Next step is to debug Behave configuration to ensure scenarios run and validate that the test passes.\n</info added on 2025-07-18T22:04:15.523Z>\n<info added on 2025-07-18T22:05:27.318Z>\nUpdate the CLI to emit a structured JSON log message when authentication succeeds using a PAT credential. The log event should include the correct event name (e.g., \"authentication_success\"), the credential source (\"PAT\"), and any other fields required by the Behave test expectation. Ensure the log format matches the test's requirements so the scenario step \"And the structured log should contain authentication success with PAT credential source\" passes.\n</info added on 2025-07-18T22:05:27.318Z>",
-            "status": "in-progress",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -171,7 +171,7 @@
             "title": "Refactor 1: Clean up PAT authentication implementation",
             "description": "Refactor PAT authentication implementation for clarity and maintainability while keeping tests green.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               2
             ],
@@ -1097,7 +1097,7 @@
     ],
     "metadata": {
       "created": "2025-07-18T20:14:51.299Z",
-      "updated": "2025-07-18T22:03:29.110Z",
+      "updated": "2025-07-19T00:59:17.786Z",
       "description": "Tasks for master context"
     }
   }

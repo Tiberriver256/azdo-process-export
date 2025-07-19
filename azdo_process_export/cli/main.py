@@ -89,46 +89,24 @@ def process(
         sys.exit(1)
 
     # Import authentication logic
-    from azdo_process_export.infrastructure.auth import get_auth_headers, AuthenticationError
+    from azdo_process_export.infrastructure.auth import get_credentials, AuthenticationError
     try:
-        auth_headers = get_auth_headers(pat)
-        # Emit structured log for authentication success with credential source
-        import json
-        if pat:
-            # Emit a JSON log line for Behave to parse
-            print(json.dumps({
-                "event": "authentication_success",
-                "credential_source": "PAT"
-            }))
-            logger.info(
-                "Authentication success",
-                extra={
-                    "event": "authentication_success",
-                    "credential_source": "PAT"
-                }
-            )
-            # Emit authentication headers as a JSON line for Behave to parse
-            print(json.dumps(auth_headers))
-        else:
-            print(json.dumps({
-                "event": "authentication_success",
-                "credential_source": "DefaultAzureCredential"
-            }))
-            logger.info(
-                "Authentication success",
-                extra={
-                    "event": "authentication_success",
-                    "credential_source": "DefaultAzureCredential"
-                }
-            )
-            print(json.dumps(auth_headers))
-        logger.info("Authentication headers generated", extra={"headers": auth_headers})
+        auth_headers, credential_source = get_credentials(pat)
+        
+        logger.info("Authentication headers generated", extra={"credential_source": credential_source})
+        
         # Simulate using the headers for an API call (actual export logic not yet implemented)
-        logger.info(f"Would export project '{project_name}' from organization '{organization}' to {out}", extra={"auth_headers": auth_headers})
+        logger.info(
+            f"Would export project '{project_name}' from organization '{organization}' to {out}",
+            extra={"credential_source": credential_source}
+        )
+        
         if skip_metrics:
             logger.info("Skipping Analytics metrics collection")
+            
         console.print("Export would complete successfully!", style="green")
         sys.exit(0)
+        
     except AuthenticationError as e:
         logger.error(f"Authentication failed: {e}", extra={"event": "auth_failure", "error": str(e)})
         console.print(f"[red]Authentication failed: {e}[/red]")

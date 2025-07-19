@@ -11,6 +11,9 @@ from pathlib import Path
 
 def before_all(context):
     """Set up test environment before all scenarios."""
+    # Enable test-specific JSON logging for authentication tests
+    os.environ["BEHAVE_JSON_LOGGING"] = "1"
+    
     # Create temporary directory for test outputs
     context.temp_dir = Path(tempfile.mkdtemp(prefix="azdo_export_test_"))
     
