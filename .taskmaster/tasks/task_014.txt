@@ -5,7 +5,7 @@
 # Priority: medium
 # Description: Configure CI pipeline to run tests, Behave acceptance suite, and measure runtime and file size metrics.
 # Details:
-Use GitHub Actions or Azure Pipelines. Steps: lint (ruff), Behave acceptance, runtime/file size checks. Publish logs and artefacts. Place CI config in /.github/workflows/ci.yml.
+Use GitHub Actions or Azure Pipelines. Steps: lint (ruff), unit tests (pytest), Behave acceptance, runtime/file size checks. Publish logs and artefacts. Place CI config in /.github/workflows/ci.yml.
 
 # Test Strategy:
 Verify CI runs on PR and main. Ensure artefacts and logs are published. Behave failures block merge.
