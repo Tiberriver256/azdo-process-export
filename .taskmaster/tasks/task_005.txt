@@ -1,6 +1,6 @@
 # Task ID: 5
 # Title: Implement Resilient Async HTTP Client
-# Status: pending
+# Status: done
 # Dependencies: 3, 4
 # Priority: high
 # Description: Develop an async Azure DevOps API client using httpx and asyncio, evolving resilience and concurrency features only as needed based on actual failures and requirements.
@@ -11,19 +11,19 @@ Begin with the simplest possible async client for a real Azure DevOps API endpoi
 Start with a failing Behave scenario for a real Azure DevOps API call. Add further scenarios only as actual needs arise (e.g., retries on 429, concurrency for multiple operations). Use evidence-driven development: only add tests and implementation for features actually required or failing.
 
 # Subtasks:
-## 1. Scenario 1: Write failing test for minimal Azure DevOps API call [pending]
+## 1. Scenario 1: Write failing test for minimal Azure DevOps API call [done]
 ### Dependencies: None
 ### Description: Create a Behave scenario for a minimal async call to a real Azure DevOps API endpoint (e.g., list projects) and verify it fails initially.
 ### Details:
 
 
-## 2. Implement 1: Make minimal Azure DevOps API scenario pass [pending]
+## 2. Implement 1: Make minimal Azure DevOps API scenario pass [done]
 ### Dependencies: 5.1
 ### Description: Implement the simplest possible async Azure DevOps API client using httpx to make the minimal scenario pass. No retries, concurrency, or special error handling yet.
 ### Details:
 
 
-## 3. Refactor 1: Clean up minimal client implementation [pending]
+## 3. Refactor 1: Clean up minimal client implementation [done]
 ### Dependencies: 5.2
 ### Description: Refactor the minimal Azure DevOps API client for clarity and maintainability while keeping tests green.
 ### Details:

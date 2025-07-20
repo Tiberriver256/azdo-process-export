@@ -11,57 +11,15 @@ Use azure-devops==7.1.0 or direct REST calls via httpx. Endpoints: /wit/workitem
 Behave scenarios for each endpoint. Unit test response parsing and error handling.
 
 # Subtasks:
-## 1. Scenario 1: Write failing test for basic project metadata fetch [pending]
+## 1. Research: Basic Project Metadata APIs [pending]
 ### Dependencies: None
-### Description: Create a Behave scenario testing basic project metadata fetch and verify it fails initially.
+### Description: Research Azure DevOps REST APIs for basic project metadata using Microsoft docs and azure-devops library documentation
 ### Details:
+Use microsoft_docs_search and get-library-docs to understand best practices for fetching basic project information, authentication requirements, and response formats
 
-
-## 2. Implement 1: Make basic metadata fetch scenario pass [pending]
+## 2. Plan: Basic Project Metadata Implementation [pending]
 ### Dependencies: 6.1
-### Description: Implement minimal project metadata fetch to make the basic scenario pass.
+### Description: Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing basic project metadata fetch
 ### Details:
-
-
-## 3. Refactor 1: Clean up basic metadata fetch [pending]
-### Dependencies: 6.2
-### Description: Refactor basic metadata fetch implementation while keeping tests green.
-### Details:
-
-
-## 4. Scenario 2: Write failing test for work item types fetch [pending]
-### Dependencies: 6.3
-### Description: Create a Behave scenario testing work item types fetch and verify it fails initially.
-### Details:
-
-
-## 5. Implement 2: Make work item types scenario pass [pending]
-### Dependencies: 6.4
-### Description: Implement work item types fetch to make the scenario pass.
-### Details:
-
-
-## 6. Refactor 2: Clean up work item types implementation [pending]
-### Dependencies: 6.5
-### Description: Refactor work item types implementation while keeping tests green.
-### Details:
-
-
-## 7. Scenario 3: Write failing test for remaining metadata types [pending]
-### Dependencies: 6.6
-### Description: Create a Behave scenario testing fields, behaviors, teams, and backlogs fetch and verify it fails initially.
-### Details:
-
-
-## 8. Implement 3: Make remaining metadata scenario pass [pending]
-### Dependencies: 6.7
-### Description: Implement fields, behaviors, teams, and backlogs fetch to make the scenario pass.
-### Details:
-
-
-## 9. Refactor 3: Final cleanup for production readiness [pending]
-### Dependencies: 6.8
-### Description: Final refactor of complete project metadata fetch for production readiness while ensuring all tests remain green.
-### Details:
-
+After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios
 

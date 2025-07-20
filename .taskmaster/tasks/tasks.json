@@ -427,98 +427,21 @@
         "subtasks": [
           {
             "id": 1,
-            "title": "Scenario 1: Write failing test for basic project metadata fetch",
-            "description": "Create a Behave scenario testing basic project metadata fetch and verify it fails initially.",
-            "details": "",
+            "title": "Research: Basic Project Metadata APIs",
+            "description": "Research Azure DevOps REST APIs for basic project metadata using Microsoft docs and azure-devops library documentation",
+            "details": "Use microsoft_docs_search and get-library-docs to understand best practices for fetching basic project information, authentication requirements, and response formats",
             "status": "pending",
             "dependencies": [],
             "parentTaskId": 6
           },
           {
             "id": 2,
-            "title": "Implement 1: Make basic metadata fetch scenario pass",
-            "description": "Implement minimal project metadata fetch to make the basic scenario pass.",
-            "details": "",
+            "title": "Plan: Basic Project Metadata Implementation",
+            "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing basic project metadata fetch",
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
             "status": "pending",
             "dependencies": [
               1
-            ],
-            "parentTaskId": 6
-          },
-          {
-            "id": 3,
-            "title": "Refactor 1: Clean up basic metadata fetch",
-            "description": "Refactor basic metadata fetch implementation while keeping tests green.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              2
-            ],
-            "parentTaskId": 6
-          },
-          {
-            "id": 4,
-            "title": "Scenario 2: Write failing test for work item types fetch",
-            "description": "Create a Behave scenario testing work item types fetch and verify it fails initially.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              3
-            ],
-            "parentTaskId": 6
-          },
-          {
-            "id": 5,
-            "title": "Implement 2: Make work item types scenario pass",
-            "description": "Implement work item types fetch to make the scenario pass.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              4
-            ],
-            "parentTaskId": 6
-          },
-          {
-            "id": 6,
-            "title": "Refactor 2: Clean up work item types implementation",
-            "description": "Refactor work item types implementation while keeping tests green.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              5
-            ],
-            "parentTaskId": 6
-          },
-          {
-            "id": 7,
-            "title": "Scenario 3: Write failing test for remaining metadata types",
-            "description": "Create a Behave scenario testing fields, behaviors, teams, and backlogs fetch and verify it fails initially.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              6
-            ],
-            "parentTaskId": 6
-          },
-          {
-            "id": 8,
-            "title": "Implement 3: Make remaining metadata scenario pass",
-            "description": "Implement fields, behaviors, teams, and backlogs fetch to make the scenario pass.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              7
-            ],
-            "parentTaskId": 6
-          },
-          {
-            "id": 9,
-            "title": "Refactor 3: Final cleanup for production readiness",
-            "description": "Final refactor of complete project metadata fetch for production readiness while ensuring all tests remain green.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              8
             ],
             "parentTaskId": 6
           }
@@ -998,7 +921,7 @@
     ],
     "metadata": {
       "created": "2025-07-18T20:14:51.299Z",
-      "updated": "2025-07-20T21:30:39.395Z",
+      "updated": "2025-07-20T22:18:26.523Z",
       "description": "Tasks for master context"
     }
   }
