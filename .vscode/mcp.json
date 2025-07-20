@@ -2,7 +2,7 @@
   "servers": {
     "task-master-ai": {
       "command": "npx",
-      "args": ["-y", "--package=task-master-ai", "task-master-ai"],
+      "args": ["-y", "--package=task-master-ai@latest", "task-master-ai"],
       "type": "stdio"
     },
     "context7": {
