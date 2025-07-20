@@ -5,7 +5,7 @@
 # Priority: high
 # Description: Create the project repository with a Screaming Architecture folder structure, separating domain logic from infrastructure details.
 # Details:
-Use Python 3.11+ for best async support. Structure folders as /domain, /infrastructure, /cli, /features. Add pyproject.toml for dependency management (prefer Poetry). Include .gitignore and README.md. Follow Screaming Architecture principles: domain objects and logic in /domain, API clients in /infrastructure, CLI entrypoint in /cli.
+Use Python 3.11+ for best async support. Structure folders as /domain, /infrastructure, /cli, /tests, /features. Add pyproject.toml for dependency management (prefer Poetry). Include .gitignore and README.md. Follow Screaming Architecture principles: domain objects and logic in /domain, API clients in /infrastructure, CLI entrypoint in /cli.
 
 # Test Strategy:
 Verify folder structure matches Screaming Architecture. Ensure all modules are importable and initial test runner executes.
@@ -21,7 +21,7 @@ Create a new directory for the project, initialize Git, and set up the initial c
 ### Dependencies: None
 ### Description: Create the required folder structure following Screaming Architecture principles.
 ### Details:
-Add /domain, /infrastructure, /cli, and /features folders. Ensure /domain is for domain logic, /infrastructure for API clients and utilities, /cli for CLI entrypoint, and /features for Behave scenarios.
+Add /domain, /infrastructure, /cli, /tests, and /features folders. Ensure /domain is for domain logic, /infrastructure for API clients and utilities, /cli for CLI entrypoint, /tests for unit tests, and /features for Behave scenarios.
 
 ## 3. Configure Dependency Management with Poetry [done]
 ### Dependencies: None
@@ -39,5 +39,5 @@ Write a README.md describing the project, architecture, and setup instructions. 
 ### Dependencies: None
 ### Description: Ensure all modules are importable and set up an initial test runner.
 ### Details:
-Add __init__.py files as needed. Set up Behave for BDD testing in /features. Confirm that all modules in /domain, /infrastructure, and /cli can be imported without errors.
+Add __init__.py files as needed. Set up a basic test runner (e.g., pytest) in /tests. Confirm that all modules in /domain, /infrastructure, and /cli can be imported without errors.
 

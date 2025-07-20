@@ -52,7 +52,6 @@ For this project, use specific documentation tools based on the technology being
   - Click CLI framework: `/pallets/click`
   - HTTPX HTTP client: `/encode/httpx`
   - Behave BDD testing: `/behave/behave`
-  - Behave BDD testing: `/behave/behave`
 - **Example**:
   ```
   resolve-library-id("click")
