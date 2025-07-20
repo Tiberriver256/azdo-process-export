@@ -11,9 +11,9 @@ To ensure consistent, reliable, and isolated execution of all Python commands, s
 
 ## Rules
 
-- **All Python scripts and CLI tools must be executed using `uv`** (preferably `uv run <script.py>` or `uvx <tool>`), not directly with `python`, `pip`, or other legacy methods.
+- **All Python scripts and CLI tools must be executed using `uv`** (preferably `uv run <script.py>`), not directly with `python`, `pip`, or other legacy methods.
 - **Dependency management** must use `uv add`, `uv lock`, and `uv sync`.
-- **Tool execution** (pytest, behave, ruff, etc.) should use `uv run <tool>` or `uvx <tool>`.
+- **Tool execution** (behave, ruff, etc.) should use `uv run <tool>`.
 - **Python version selection** should be managed via `uv` options (e.g., `--python 3.11`).
 - **Installation**: If `uv` is not installed, follow the official instructions:
   - Windows: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
@@ -24,7 +24,7 @@ To ensure consistent, reliable, and isolated execution of all Python commands, s
 ## Example Usage
 
 - Run a script: `uv run script.py`
-- Run a tool: `uvx pytest` or `uv run pytest`
+- Run a tool: `uv run behave`
 - Add a dependency: `uv add requests`
 - Sync dependencies: `uv sync`
 - Specify Python version: `uv run --python 3.11 script.py`

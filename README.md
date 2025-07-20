@@ -87,6 +87,8 @@ uv run pre-commit run -a
 uv run behave
 ```
 
+**Note**: This project uses **BDD testing only** with Behave. Unit testing is not used.
+
 ## Project Structure (Screaming Architecture)
 
 ```
@@ -94,7 +96,7 @@ azdo_process_export/
 ├── domain/          # Business logic (Process, Metrics)
 ├── infrastructure/  # Azure DevOps APIs, Analytics
 ├── cli/            # Click command interface
-├── tests/          # Behave BDD scenarios
+├── features/       # Behave BDD scenarios
 └── scripts/        # Sample notebooks
 ```
 
@@ -121,18 +123,17 @@ The tool generates a comprehensive JSON file containing:
 }
 ```
 
-## TDD Workflow for CLI Development
+## BDD Workflow for CLI Development
 
-This project uses **Test-Driven Development (TDD)** for CLI features, with full coverage via Behave BDD scenarios and step definitions.
+This project uses **Behavior-Driven Development (BDD)** exclusively for testing, with full coverage via Behave BDD scenarios and step definitions. **Unit testing is not used in this project.**
 
 ### Workflow Steps
-1. **Write Behave feature scenarios** in `tests/features/cli_basic.feature` for each CLI requirement (help, version, argument validation, error handling, etc).
-2. **Implement failing step definitions** in `tests/steps/cli_steps.py` to drive CLI invocation and output checks.
+1. **Write Behave feature scenarios** in `features/cli_basic.feature` for each CLI requirement (help, version, argument validation, error handling, etc).
+2. **Implement failing step definitions** in `features/steps/cli_steps.py` to drive CLI invocation and output checks.
 3. **Develop CLI code** in `azdo_process_export/cli/main.py` to pass the scenarios, using Click for argument parsing and Rich for output/logging.
 4. **Run tests** with `uv run behave` to verify all scenarios pass. Fix code and tests until green.
 5. **Iterate**: Add new scenarios for each feature or bug fix, and repeat the cycle.
 
-#### Example Scenario
 ```feature
 Scenario: Require organization configuration
   When I run "azdo-process-export process 'Test Project'"
@@ -158,7 +159,7 @@ def process(...):
         logger.error("Organization not specified.")
         sys.exit(1)
 ```
-See `tests/features/cli_basic.feature` and `tests/steps/cli_steps.py` for full coverage examples.
+See `features/cli_basic.feature` and `features/steps/cli_steps.py` for full coverage examples.
 
 ## License
 
