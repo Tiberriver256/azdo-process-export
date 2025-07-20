@@ -11,7 +11,7 @@ azdo_process_export/
 ├── domain/          # Business logic: project_process.py, metrics.py
 ├── infrastructure/  # External APIs: azure_devops_rest.py, analytics_odata.py
 ├── cli/            # Click command facade
-├── tests/          # Behave BDD features & steps
+├── features/       # Behave BDD features & steps
 └── scripts/        # Sample notebooks and utilities
 ```
 
@@ -48,12 +48,9 @@ For development tooling (testing, linting, type checking), dependencies are mana
 [dependency-groups]
 dev = [
     "behave>=1.2.6",
-    "pytest>=7.2.0",
-    "pytest-asyncio>=0.21.0",
     "pre-commit>=2.20.0",
     "deptry>=0.23.0",
     "mypy>=0.991",
-    "pytest-cov>=4.0.0",
     "ruff>=0.11.5",
 ]
 ```
@@ -198,8 +195,10 @@ Following Better Stack guidance:
 
 ### Behavior-Driven Development (BDD)
 
-- **Gherkin scenarios** in `tests/features/`
-- **Step definitions** in `tests/steps/`
+This project uses **BDD testing exclusively** with Behave. **Unit testing is not used.**
+
+- **Gherkin scenarios** in `features/`
+- **Step definitions** in `features/steps/`
 - **Ephemeral test environment** with Azure DevOps demo org
 
 ### Test Categories

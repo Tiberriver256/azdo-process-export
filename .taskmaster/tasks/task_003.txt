@@ -16,16 +16,16 @@ Use Behave scenarios to test both credential paths (PAT and Azure AD), including
 ### Description: Create a Behave scenario testing basic PAT authentication and verify it fails initially.
 ### Details:
 <info added on 2025-07-18T21:28:17.526Z>
-Behave scenario for basic PAT authentication is present in /tests/features/authentication.feature. Missing step definitions for structured log and authentication header checks have been added to /tests/steps/cli_steps.py; these steps currently fail as expected, confirming the scenario is initially red. Next, run Behave to verify the test fails, then begin implementing the authentication logic to make the scenario pass.
+Behave scenario for basic PAT authentication is present in /features/authentication.feature. Missing step definitions for structured log and authentication header checks have been added to /features/steps/cli_steps.py; these steps currently fail as expected, confirming the scenario is initially red. Next, run Behave to verify the test fails, then begin implementing the authentication logic to make the scenario pass.
 </info added on 2025-07-18T21:28:17.526Z>
 <info added on 2025-07-18T21:28:40.731Z>
-Update Behave configuration to recognize the custom steps directory by setting steps_dir in behave.ini or command-line options, or move/copy the step definitions from /tests/steps/cli_steps.py to /features/steps/cli_steps.py so Behave can discover them. After resolving the steps directory issue, rerun Behave to confirm the scenario fails as expected, ensuring the test setup is correct before proceeding to implement authentication logic.
+Update Behave configuration to recognize the custom steps directory by setting steps_dir in behave.ini or command-line options, or move/copy the step definitions from /features/steps/cli_steps.py to /features/steps/cli_steps.py so Behave can discover them. After resolving the steps directory issue, rerun Behave to confirm the scenario fails as expected, ensuring the test setup is correct before proceeding to implement authentication logic.
 </info added on 2025-07-18T21:28:40.731Z>
 <info added on 2025-07-18T21:29:22.134Z>
 Implement the missing step definitions for the PAT authentication scenario, including 'Given I have a valid Personal Access Token', in /features/steps/cli_steps.py. Once all steps are defined and the scenario is recognized by Behave, proceed to implement minimal PAT authentication logic in /infrastructure/auth.py to make the test pass. This should include accepting a PAT via CLI, using it for Basic Auth, and ensuring the authentication header is set correctly. Run Behave to confirm the scenario passes, verifying both the step definitions and the initial authentication implementation.
 </info added on 2025-07-18T21:29:22.134Z>
 <info added on 2025-07-18T21:31:11.268Z>
-Migrate environment.py from /tests to /features to align with Behave's standard directory structure. Move all .feature files to the root of /features and consolidate step definitions in /features/steps. Ensure all BDD test files, including environment.py and step definitions, are located within the /features directory for proper Behave discovery and execution. Update any relevant Behave configuration or CI scripts to reference the new /features structure.
+Migrate environment.py from /features to /features to align with Behave's standard directory structure. Move all .feature files to the root of /features and consolidate step definitions in /features/steps. Ensure all BDD test files, including environment.py and step definitions, are located within the /features directory for proper Behave discovery and execution. Update any relevant Behave configuration or CI scripts to reference the new /features structure.
 </info added on 2025-07-18T21:31:11.268Z>
 
 ## 2. Implement 1: Make basic PAT authentication scenario pass [done]
