@@ -85,9 +85,6 @@ uv run pre-commit run -a
 ```bash
 # BDD tests with Behave
 uv run behave
-
-# Unit tests with pytest
-uv run pytest
 ```
 
 ## Project Structure (Screaming Architecture)

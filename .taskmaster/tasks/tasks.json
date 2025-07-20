@@ -370,31 +370,31 @@
       {
         "id": 5,
         "title": "Implement Resilient Async HTTP Client",
-        "description": "Develop an async HTTP client with exponential backoff for 429/503, supporting up to 10 concurrent requests.",
-        "details": "Use httpx==0.27.0 with asyncio for concurrency. Integrate tenacity==8.2.2 for exponential backoff. Limit concurrency with asyncio.Semaphore(10). Centralize error handling for 429/503. Place client in /infrastructure/http_client.py.",
-        "testStrategy": "Unit test retry logic and concurrency limits. Behave scenarios for simulated transient failures.",
-        "priority": "high",
+        "description": "Develop an async Azure DevOps API client using httpx and asyncio, evolving resilience and concurrency features only as needed based on actual failures and requirements.",
+        "status": "done",
         "dependencies": [
           3,
           4
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "Begin with the simplest possible async client for a real Azure DevOps API endpoint (e.g., listing projects or work items) using httpx==0.27.0 and asyncio. Do not add concurrency, retry, or error handling until tests or real usage demonstrate the need. Avoid premature optimizations such as hardcoded concurrency limits, complex backoff, or external retry libraries. Place the client in /infrastructure/http_client.py. Add complexity only in response to failing tests or encountered issues, following strict TDD and YAGNI principles.",
+        "testStrategy": "Start with a failing Behave scenario for a real Azure DevOps API call. Add further scenarios only as actual needs arise (e.g., retries on 429, concurrency for multiple operations). Use evidence-driven development: only add tests and implementation for features actually required or failing.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Scenario 1: Write failing test for basic async HTTP GET",
-            "description": "Create a Behave scenario testing basic async HTTP GET request functionality and verify it fails initially.",
+            "title": "Scenario 1: Write failing test for minimal Azure DevOps API call",
+            "description": "Create a Behave scenario for a minimal async call to a real Azure DevOps API endpoint (e.g., list projects) and verify it fails initially.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "parentTaskId": 5
           },
           {
             "id": 2,
-            "title": "Implement 1: Make basic GET scenario pass",
-            "description": "Implement minimal async HTTP client with httpx to make the basic GET scenario pass.",
+            "title": "Implement 1: Make minimal Azure DevOps API scenario pass",
+            "description": "Implement the simplest possible async Azure DevOps API client using httpx to make the minimal scenario pass. No retries, concurrency, or special error handling yet.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -402,111 +402,12 @@
           },
           {
             "id": 3,
-            "title": "Refactor 1: Clean up basic HTTP client",
-            "description": "Refactor basic HTTP client implementation for clarity and maintainability while keeping tests green.",
+            "title": "Refactor 1: Clean up minimal client implementation",
+            "description": "Refactor the minimal Azure DevOps API client for clarity and maintainability while keeping tests green.",
             "details": "",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               2
-            ],
-            "parentTaskId": 5
-          },
-          {
-            "id": 4,
-            "title": "Scenario 2: Write failing test for concurrency control",
-            "description": "Create a Behave scenario testing concurrent HTTP requests (max 10) and verify it fails initially.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              3
-            ],
-            "parentTaskId": 5
-          },
-          {
-            "id": 5,
-            "title": "Implement 2: Make concurrency scenario pass",
-            "description": "Implement asyncio.Semaphore(10) concurrency control to make the concurrency scenario pass.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              4
-            ],
-            "parentTaskId": 5
-          },
-          {
-            "id": 6,
-            "title": "Refactor 2: Clean up concurrency implementation",
-            "description": "Refactor concurrency implementation for better structure while keeping tests green.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              5
-            ],
-            "parentTaskId": 5
-          },
-          {
-            "id": 7,
-            "title": "Scenario 3: Write failing test for 429 rate limit handling",
-            "description": "Create a Behave scenario testing HTTP 429 rate limit response handling and verify it fails initially.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              6
-            ],
-            "parentTaskId": 5
-          },
-          {
-            "id": 8,
-            "title": "Implement 3: Make 429 handling scenario pass",
-            "description": "Implement basic exponential backoff for 429 responses using tenacity to make the scenario pass.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              7
-            ],
-            "parentTaskId": 5
-          },
-          {
-            "id": 9,
-            "title": "Refactor 3: Clean up backoff implementation",
-            "description": "Refactor exponential backoff implementation for better maintainability while keeping tests green.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              8
-            ],
-            "parentTaskId": 5
-          },
-          {
-            "id": 10,
-            "title": "Scenario 4: Write failing test for 503 service unavailable handling",
-            "description": "Create a Behave scenario testing HTTP 503 service unavailable response handling and verify it fails initially.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              9
-            ],
-            "parentTaskId": 5
-          },
-          {
-            "id": 11,
-            "title": "Implement 4: Make 503 handling scenario pass",
-            "description": "Extend exponential backoff to handle 503 responses to make the scenario pass.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              10
-            ],
-            "parentTaskId": 5
-          },
-          {
-            "id": 12,
-            "title": "Refactor 4: Final cleanup for production readiness",
-            "description": "Final refactor of the complete async HTTP client for production readiness while ensuring all tests remain green.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              11
             ],
             "parentTaskId": 5
           }
@@ -1097,7 +998,7 @@
     ],
     "metadata": {
       "created": "2025-07-18T20:14:51.299Z",
-      "updated": "2025-07-20T21:01:46.259Z",
+      "updated": "2025-07-20T21:30:39.395Z",
       "description": "Tasks for master context"
     }
   }

@@ -1,6 +1,6 @@
 # Task ID: 3
 # Title: Implement Authentication Logic
-# Status: pending
+# Status: done
 # Dependencies: 2
 # Priority: high
 # Description: Support DefaultAzureCredential chain and PAT override for Azure DevOps and OData APIs, following latest best practices for credential precedence, error handling, and logging.
@@ -11,61 +11,77 @@ Implement authentication logic in /infrastructure/auth.py. If --pat is provided,
 Use Behave scenarios to test both credential paths (PAT and Azure AD), including mocked failures for each. Verify error messaging, exit codes, and structured JSON logging output. Ensure correct token scopes are used for Azure DevOps and OData endpoints. Validate documentation updates for credential precedence and troubleshooting.
 
 # Subtasks:
-## 1. Scenario 1: Write failing test for basic PAT authentication [pending]
+## 1. Scenario 1: Write failing test for basic PAT authentication [done]
 ### Dependencies: None
 ### Description: Create a Behave scenario testing basic PAT authentication and verify it fails initially.
 ### Details:
+<info added on 2025-07-18T21:28:17.526Z>
+Behave scenario for basic PAT authentication is present in /tests/features/authentication.feature. Missing step definitions for structured log and authentication header checks have been added to /tests/steps/cli_steps.py; these steps currently fail as expected, confirming the scenario is initially red. Next, run Behave to verify the test fails, then begin implementing the authentication logic to make the scenario pass.
+</info added on 2025-07-18T21:28:17.526Z>
+<info added on 2025-07-18T21:28:40.731Z>
+Update Behave configuration to recognize the custom steps directory by setting steps_dir in behave.ini or command-line options, or move/copy the step definitions from /tests/steps/cli_steps.py to /features/steps/cli_steps.py so Behave can discover them. After resolving the steps directory issue, rerun Behave to confirm the scenario fails as expected, ensuring the test setup is correct before proceeding to implement authentication logic.
+</info added on 2025-07-18T21:28:40.731Z>
+<info added on 2025-07-18T21:29:22.134Z>
+Implement the missing step definitions for the PAT authentication scenario, including 'Given I have a valid Personal Access Token', in /features/steps/cli_steps.py. Once all steps are defined and the scenario is recognized by Behave, proceed to implement minimal PAT authentication logic in /infrastructure/auth.py to make the test pass. This should include accepting a PAT via CLI, using it for Basic Auth, and ensuring the authentication header is set correctly. Run Behave to confirm the scenario passes, verifying both the step definitions and the initial authentication implementation.
+</info added on 2025-07-18T21:29:22.134Z>
+<info added on 2025-07-18T21:31:11.268Z>
+Migrate environment.py from /tests to /features to align with Behave's standard directory structure. Move all .feature files to the root of /features and consolidate step definitions in /features/steps. Ensure all BDD test files, including environment.py and step definitions, are located within the /features directory for proper Behave discovery and execution. Update any relevant Behave configuration or CI scripts to reference the new /features structure.
+</info added on 2025-07-18T21:31:11.268Z>
 
-
-## 2. Implement 1: Make basic PAT authentication scenario pass [pending]
+## 2. Implement 1: Make basic PAT authentication scenario pass [done]
 ### Dependencies: 3.1
 ### Description: Implement minimal PAT authentication in /infrastructure/auth.py to make the basic PAT scenario pass.
 ### Details:
+<info added on 2025-07-18T22:04:15.523Z>
+Minimal PAT authentication has been implemented in the CLI: the process command now invokes get_auth_headers(pat), logs authentication success or failure, and exits with code 0 on success or 2 on failure. The Behave scenario for PAT authentication is integrated with the CLI logic. Behave was executed, but all scenarios were skipped, likely due to missing or misconfigured tags or step definitions. No code errors were found in the CLI or authentication modules. Next step is to debug Behave configuration to ensure scenarios run and validate that the test passes.
+</info added on 2025-07-18T22:04:15.523Z>
+<info added on 2025-07-18T22:05:27.318Z>
+Update the CLI to emit a structured JSON log message when authentication succeeds using a PAT credential. The log event should include the correct event name (e.g., "authentication_success"), the credential source ("PAT"), and any other fields required by the Behave test expectation. Ensure the log format matches the test's requirements so the scenario step "And the structured log should contain authentication success with PAT credential source" passes.
+</info added on 2025-07-18T22:05:27.318Z>
 
-
-## 3. Refactor 1: Clean up PAT authentication implementation [pending]
+## 3. Refactor 1: Clean up PAT authentication implementation [done]
 ### Dependencies: 3.2
 ### Description: Refactor PAT authentication implementation for clarity and maintainability while keeping tests green.
 ### Details:
 
 
-## 4. Scenario 2: Write failing test for DefaultAzureCredential fallback [pending]
+## 4. Scenario 2: Write failing test for DefaultAzureCredential fallback [done]
 ### Dependencies: 3.3
 ### Description: Create a Behave scenario testing DefaultAzureCredential fallback when no PAT is provided and verify it fails initially.
 ### Details:
 
 
-## 5. Implement 2: Make DefaultAzureCredential scenario pass [pending]
+## 5. Implement 2: Make DefaultAzureCredential scenario pass [done]
 ### Dependencies: 3.4
 ### Description: Implement DefaultAzureCredential fallback with correct Azure DevOps token scope to make the scenario pass.
 ### Details:
 
 
-## 6. Refactor 2: Clean up DefaultAzureCredential implementation [pending]
+## 6. Refactor 2: Clean up DefaultAzureCredential implementation [done]
 ### Dependencies: 3.5
 ### Description: Refactor DefaultAzureCredential implementation for better structure while keeping tests green.
 ### Details:
 
 
-## 7. Scenario 3: Write failing test for error handling and logging [pending]
+## 7. Scenario 3: Write failing test for error handling and logging [done]
 ### Dependencies: 3.6
 ### Description: Create a Behave scenario testing authentication error handling and structured JSON logging and verify it fails initially.
 ### Details:
 
 
-## 8. Implement 3: Make error handling and logging scenario pass [pending]
+## 8. Implement 3: Make error handling and logging scenario pass [done]
 ### Dependencies: 3.7
 ### Description: Implement structured JSON logging and centralized error handling with clear error messages to make the scenario pass.
 ### Details:
 
 
-## 9. Scenario 4: Write failing test for documentation and help [pending]
+## 9. Scenario 4: Write failing test for documentation and help [done]
 ### Dependencies: 3.8
 ### Description: Create a Behave scenario testing credential precedence documentation and troubleshooting and verify it fails initially.
 ### Details:
 
 
-## 10. Implement 4: Make documentation scenario pass and final refactor [pending]
+## 10. Implement 4: Make documentation scenario pass and final refactor [done]
 ### Dependencies: 3.9
 ### Description: Implement documentation updates for README and CLI help to make the scenario pass, then final refactor for production readiness.
 ### Details:
