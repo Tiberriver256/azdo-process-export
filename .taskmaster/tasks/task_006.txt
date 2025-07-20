@@ -1,14 +1,14 @@
 # Task ID: 6
-# Title: Fetch Project Metadata from Azure DevOps REST APIs
+# Title: Fetch Basic Project Metadata from Azure DevOps REST APIs
 # Status: pending
 # Dependencies: 5
 # Priority: high
-# Description: Implement logic to fetch work-item types, fields, behaviors, teams, backlogs, and team settings for a given project.
+# Description: Implement logic to fetch basic project information such as project details, properties, and configuration from Azure DevOps.
 # Details:
-Use azure-devops==7.1.0 or direct REST calls via httpx. Endpoints: /wit/workitemtypes, /wit/fields, /processes/{id}/behaviors, /core/teams, /work/backlogs, /work/teamsettings. Serialize results into domain objects. Place logic in /domain/metadata.py.
+Use azure-devops==7.1.0 or direct REST calls via httpx. Focus on core project endpoints: /core/projects/{projectId} for project details and basic configuration. Serialize results into domain objects. Place logic in /domain/metadata.py.
 
 # Test Strategy:
-Behave scenarios for each endpoint. Unit test response parsing and error handling.
+Behave scenarios for project metadata endpoint. Unit test response parsing and error handling for basic project information.
 
 # Subtasks:
 ## 1. Research: Basic Project Metadata APIs [pending]

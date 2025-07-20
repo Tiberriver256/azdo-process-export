@@ -1,0 +1,25 @@
+# Task ID: 20
+# Title: Fetch Backlogs from Azure DevOps REST APIs
+# Status: pending
+# Dependencies: 5, 3, 19
+# Priority: high
+# Description: Implement functionality to retrieve backlog configurations, iterations, and team settings from Azure DevOps using the /work/backlogs and /work/teamsettings endpoints.
+# Details:
+Create a new module in /domain/backlogs.py for domain objects representing backlogs, including Backlog, BacklogConfiguration, Iteration, TeamSettings, and BacklogLevel classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /work/backlogs and /work/teamsettings endpoints. The implementation should fetch backlog configurations for a given team and project, including backlog hierarchy levels (Epic, Feature, User Story, etc.), iteration paths and dates, team capacity settings, and working days configuration. For the /work/backlogs endpoint, retrieve all configured backlog levels and their associated work item types. For the /work/teamsettings endpoint, fetch team-specific settings including default iteration path, backlog navigation levels, and working days. Serialize API responses into domain objects with proper error handling for authentication failures (401/403), missing resources (404), rate limiting (429), and server errors (500). Include validation for required fields and proper type conversion for dates and numeric values. Use the existing async HTTP client patterns established in previous tasks for consistent error handling and logging.
+
+# Test Strategy:
+Write Behave scenarios in /features/backlogs.feature to test fetching backlog configurations from a real Azure DevOps project, including scenarios for successful retrieval of all backlog levels, fetching team settings with iterations and capacity, handling of non-existent teams or projects (404 errors), authentication failures (401/403), API rate limiting (429), and server errors (500). Create unit tests for domain object serialization and validation, ensuring proper handling of optional fields, date parsing, and numeric conversions. Test edge cases such as teams with no configured backlogs, empty iteration lists, and malformed API responses. Verify that the structured JSON logging captures all API interactions with appropriate log levels and context information.
+
+# Subtasks:
+## 1. Research: Backlogs APIs [pending]
+### Dependencies: None
+### Description: Research Azure DevOps REST APIs for backlogs using Microsoft docs and azure-devops library documentation
+### Details:
+Use microsoft_docs_search and get-library-docs to understand backlogs endpoints, backlog configurations, and work item retrieval patterns
+
+## 2. Plan: Backlogs Implementation [pending]
+### Dependencies: 20.1
+### Description: Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing backlogs fetch
+### Details:
+After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios
+

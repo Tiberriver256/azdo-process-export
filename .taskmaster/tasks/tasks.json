@@ -415,37 +415,16 @@
       },
       {
         "id": 6,
-        "title": "Fetch Project Metadata from Azure DevOps REST APIs",
-        "description": "Implement logic to fetch work-item types, fields, behaviors, teams, backlogs, and team settings for a given project.",
-        "details": "Use azure-devops==7.1.0 or direct REST calls via httpx. Endpoints: /wit/workitemtypes, /wit/fields, /processes/{id}/behaviors, /core/teams, /work/backlogs, /work/teamsettings. Serialize results into domain objects. Place logic in /domain/metadata.py.",
-        "testStrategy": "Behave scenarios for each endpoint. Unit test response parsing and error handling.",
-        "priority": "high",
+        "title": "Fetch Basic Project Metadata from Azure DevOps REST APIs",
+        "description": "Implement logic to fetch basic project information such as project details, properties, and configuration from Azure DevOps.",
+        "status": "in-progress",
         "dependencies": [
           5
         ],
-        "status": "pending",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Research: Basic Project Metadata APIs",
-            "description": "Research Azure DevOps REST APIs for basic project metadata using Microsoft docs and azure-devops library documentation",
-            "details": "Use microsoft_docs_search and get-library-docs to understand best practices for fetching basic project information, authentication requirements, and response formats",
-            "status": "pending",
-            "dependencies": [],
-            "parentTaskId": 6
-          },
-          {
-            "id": 2,
-            "title": "Plan: Basic Project Metadata Implementation",
-            "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing basic project metadata fetch",
-            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
-            "status": "pending",
-            "dependencies": [
-              1
-            ],
-            "parentTaskId": 6
-          }
-        ]
+        "priority": "high",
+        "details": "Use azure-devops==7.1.0 or direct REST calls via httpx. Focus on core project endpoints: /core/projects/{projectId} for project details and basic configuration. Serialize results into domain objects. Place logic in /domain/metadata.py.",
+        "testStrategy": "Behave scenarios for project metadata endpoint. Unit test response parsing and error handling for basic project information.",
+        "subtasks": []
       },
       {
         "id": 7,
@@ -917,11 +896,189 @@
             "parentTaskId": 15
           }
         ]
+      },
+      {
+        "id": 16,
+        "title": "Fetch Work Item Types from Azure DevOps REST APIs",
+        "description": "Implement functionality to retrieve work item type definitions from Azure DevOps, including fields, states, and rules using the /wit/workitemtypes endpoint.",
+        "details": "Create a new module in /domain/work_item_types.py for domain objects representing work item types, fields, states, and rules. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /wit/workitemtypes endpoint. The implementation should fetch work item type definitions for a given project, including all associated metadata such as field definitions, workflow states, and business rules. Serialize API responses into strongly-typed domain objects with proper validation. Include comprehensive error handling for API failures, network issues, and malformed responses. Follow the established patterns from the existing HTTP client for authentication, logging, and resilience. Structure the code to support both individual work item type retrieval and bulk fetching of all types for a project.",
+        "testStrategy": "Write Behave scenarios in /features/work_item_types.feature to test fetching work item types from a real Azure DevOps project, including scenarios for successful retrieval, handling of missing work item types, and API error conditions. Create unit tests for domain object serialization and validation. Test error handling for network failures, authentication issues, and malformed API responses. Verify that the fetched work item type data includes all required fields (name, description, fields, states, rules) and that the domain objects properly represent the Azure DevOps work item type schema.",
+        "status": "pending",
+        "dependencies": [
+          5,
+          3
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Research: Work Item Types APIs",
+            "description": "Research Azure DevOps REST APIs for work item types using Microsoft docs and azure-devops library documentation",
+            "details": "Use microsoft_docs_search and get-library-docs to understand work item types endpoints, response schemas, and best practices",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 16
+          },
+          {
+            "id": 2,
+            "title": "Plan: Work Item Types Implementation",
+            "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing work item types fetch",
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 16
+          }
+        ]
+      },
+      {
+        "id": 17,
+        "title": "Fetch Work Item Fields from Azure DevOps REST APIs",
+        "description": "Implement functionality to retrieve field definitions from Azure DevOps using the /wit/fields endpoint, including field types, allowed values, constraints, and metadata.",
+        "details": "Create a new module in /domain/work_item_fields.py for domain objects representing field definitions including FieldDefinition, FieldType, FieldConstraints, and AllowedValues classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /wit/fields endpoint. The implementation should fetch all field definitions for a given project or organization, including field metadata such as data types (string, integer, datetime, etc.), validation rules, allowed values for picklist fields, and usage constraints. Serialize API responses into domain objects with proper error handling for malformed responses. Handle pagination if the API supports it. Include support for filtering fields by type or usage scope. Add comprehensive logging using the existing structured logging configuration. Place field-specific business logic in the domain layer and keep API interaction details in the infrastructure layer.",
+        "testStrategy": "Write Behave scenarios in /features/work_item_fields.feature to test fetching field definitions from a real Azure DevOps project, including scenarios for successful retrieval of all fields, filtering by field type, handling of API errors (401, 403, 404, 429, 500), and validation of field metadata completeness. Create unit tests for domain object serialization and validation logic. Test edge cases such as custom fields, fields with complex constraints, and fields with large allowed value lists. Verify proper error handling and logging for malformed API responses. Include performance tests for large field collections.",
+        "status": "pending",
+        "dependencies": [
+          5,
+          3,
+          4
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Research: Work Item Fields APIs",
+            "description": "Research Azure DevOps REST APIs for work item fields using Microsoft docs and azure-devops library documentation",
+            "details": "Use microsoft_docs_search and get-library-docs to understand fields endpoints, field definitions, and retrieval best practices",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 17
+          },
+          {
+            "id": 2,
+            "title": "Plan: Work Item Fields Implementation",
+            "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing work item fields fetch",
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 17
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "title": "Fetch Process Behaviors from Azure DevOps REST APIs",
+        "description": "Implement functionality to retrieve process behavior configurations from Azure DevOps using the /processes/{processId}/behaviors endpoint, including state transitions, business rules, and process customizations.",
+        "details": "Create a new module in /domain/process_behaviors.py for domain objects representing process behaviors, including ProcessBehavior, StateTransition, BusinessRule, and ProcessCustomization classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /processes/{processId}/behaviors endpoint. The implementation should fetch behavior configurations for a given process ID, including state transition rules, field validation rules, and custom process behaviors. Serialize API responses into strongly-typed domain objects with proper validation. Handle API pagination if the behaviors endpoint supports it. Include proper error handling for common scenarios like invalid process IDs (404), unauthorized access (401/403), and API rate limiting (429). Use the existing async HTTP client patterns established in the codebase for consistency. Add logging for API calls and error conditions using the structured logging framework already in place.",
+        "testStrategy": "Write Behave scenarios in /features/process_behaviors.feature to test fetching process behaviors from a real Azure DevOps organization, including scenarios for successful retrieval of behaviors for valid process IDs, handling of invalid or non-existent process IDs (404 errors), authentication failures (401/403), API rate limiting (429), and server errors (500). Create unit tests for domain object serialization and validation of ProcessBehavior, StateTransition, and BusinessRule classes. Test edge cases such as processes with no custom behaviors, processes with complex state transition rules, and proper handling of API pagination. Verify that the structured logging output contains appropriate context for debugging API interactions and errors.",
+        "status": "pending",
+        "dependencies": [
+          5,
+          3,
+          4
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Research: Process Behaviors APIs",
+            "description": "Research Azure DevOps REST APIs for process behaviors using Microsoft docs and azure-devops library documentation",
+            "details": "Use microsoft_docs_search and get-library-docs to understand behaviors endpoints, process configurations, and retrieval patterns",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 18
+          },
+          {
+            "id": 2,
+            "title": "Plan: Process Behaviors Implementation",
+            "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing process behaviors fetch",
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 18
+          }
+        ]
+      },
+      {
+        "id": 19,
+        "title": "Fetch Teams from Azure DevOps REST APIs",
+        "description": "Implement functionality to retrieve team information from Azure DevOps using the /core/teams endpoint, including team members, settings, and configurations.",
+        "details": "Create a new module in /domain/teams.py for domain objects representing teams, including Team, TeamMember, TeamSettings, and TeamConfiguration classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /core/teams endpoint. The implementation should fetch team information for a given project, including team metadata, member lists with roles and permissions, team settings such as backlog navigation levels and bug behavior, and team configurations like area paths and iteration paths. Serialize API responses into strongly-typed domain objects with proper validation. Handle pagination for large team member lists and implement proper error handling for common scenarios like unauthorized access, non-existent teams, and API rate limiting. Include support for filtering teams by project scope and retrieving detailed member information including user identities, roles, and team-specific permissions.",
+        "testStrategy": "Write Behave scenarios in /features/teams.feature to test fetching teams from a real Azure DevOps project, including scenarios for successful retrieval of all teams, fetching specific team details with members, handling of non-existent teams (404 errors), authentication failures (401/403), API rate limiting (429), and server errors (500). Create unit tests for domain object serialization and validation, ensuring proper handling of optional fields and edge cases. Test pagination scenarios with teams that have large member lists. Verify proper error messages are returned for invalid team IDs or project names. Include integration tests that validate the complete flow from API call to domain object creation.",
+        "status": "pending",
+        "dependencies": [
+          5,
+          3
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Research: Teams APIs",
+            "description": "Research Azure DevOps REST APIs for teams using Microsoft docs and azure-devops library documentation",
+            "details": "Use microsoft_docs_search and get-library-docs to understand teams endpoints, team configurations, and member retrieval patterns",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 19
+          },
+          {
+            "id": 2,
+            "title": "Plan: Teams Implementation",
+            "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing teams fetch",
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 19
+          }
+        ]
+      },
+      {
+        "id": 20,
+        "title": "Fetch Backlogs from Azure DevOps REST APIs",
+        "description": "Implement functionality to retrieve backlog configurations, iterations, and team settings from Azure DevOps using the /work/backlogs and /work/teamsettings endpoints.",
+        "details": "Create a new module in /domain/backlogs.py for domain objects representing backlogs, including Backlog, BacklogConfiguration, Iteration, TeamSettings, and BacklogLevel classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /work/backlogs and /work/teamsettings endpoints. The implementation should fetch backlog configurations for a given team and project, including backlog hierarchy levels (Epic, Feature, User Story, etc.), iteration paths and dates, team capacity settings, and working days configuration. For the /work/backlogs endpoint, retrieve all configured backlog levels and their associated work item types. For the /work/teamsettings endpoint, fetch team-specific settings including default iteration path, backlog navigation levels, and working days. Serialize API responses into domain objects with proper error handling for authentication failures (401/403), missing resources (404), rate limiting (429), and server errors (500). Include validation for required fields and proper type conversion for dates and numeric values. Use the existing async HTTP client patterns established in previous tasks for consistent error handling and logging.",
+        "testStrategy": "Write Behave scenarios in /features/backlogs.feature to test fetching backlog configurations from a real Azure DevOps project, including scenarios for successful retrieval of all backlog levels, fetching team settings with iterations and capacity, handling of non-existent teams or projects (404 errors), authentication failures (401/403), API rate limiting (429), and server errors (500). Create unit tests for domain object serialization and validation, ensuring proper handling of optional fields, date parsing, and numeric conversions. Test edge cases such as teams with no configured backlogs, empty iteration lists, and malformed API responses. Verify that the structured JSON logging captures all API interactions with appropriate log levels and context information.",
+        "status": "pending",
+        "dependencies": [
+          5,
+          3,
+          19
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Research: Backlogs APIs",
+            "description": "Research Azure DevOps REST APIs for backlogs using Microsoft docs and azure-devops library documentation",
+            "details": "Use microsoft_docs_search and get-library-docs to understand backlogs endpoints, backlog configurations, and work item retrieval patterns",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 20
+          },
+          {
+            "id": 2,
+            "title": "Plan: Backlogs Implementation",
+            "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing backlogs fetch",
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 20
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-07-18T20:14:51.299Z",
-      "updated": "2025-07-20T22:18:26.523Z",
+      "updated": "2025-07-20T22:34:10.302Z",
       "description": "Tasks for master context"
     }
   }

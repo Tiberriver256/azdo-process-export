@@ -1,0 +1,25 @@
+# Task ID: 17
+# Title: Fetch Work Item Fields from Azure DevOps REST APIs
+# Status: pending
+# Dependencies: 5, 3, 4
+# Priority: high
+# Description: Implement functionality to retrieve field definitions from Azure DevOps using the /wit/fields endpoint, including field types, allowed values, constraints, and metadata.
+# Details:
+Create a new module in /domain/work_item_fields.py for domain objects representing field definitions including FieldDefinition, FieldType, FieldConstraints, and AllowedValues classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /wit/fields endpoint. The implementation should fetch all field definitions for a given project or organization, including field metadata such as data types (string, integer, datetime, etc.), validation rules, allowed values for picklist fields, and usage constraints. Serialize API responses into domain objects with proper error handling for malformed responses. Handle pagination if the API supports it. Include support for filtering fields by type or usage scope. Add comprehensive logging using the existing structured logging configuration. Place field-specific business logic in the domain layer and keep API interaction details in the infrastructure layer.
+
+# Test Strategy:
+Write Behave scenarios in /features/work_item_fields.feature to test fetching field definitions from a real Azure DevOps project, including scenarios for successful retrieval of all fields, filtering by field type, handling of API errors (401, 403, 404, 429, 500), and validation of field metadata completeness. Create unit tests for domain object serialization and validation logic. Test edge cases such as custom fields, fields with complex constraints, and fields with large allowed value lists. Verify proper error handling and logging for malformed API responses. Include performance tests for large field collections.
+
+# Subtasks:
+## 1. Research: Work Item Fields APIs [pending]
+### Dependencies: None
+### Description: Research Azure DevOps REST APIs for work item fields using Microsoft docs and azure-devops library documentation
+### Details:
+Use microsoft_docs_search and get-library-docs to understand fields endpoints, field definitions, and retrieval best practices
+
+## 2. Plan: Work Item Fields Implementation [pending]
+### Dependencies: 17.1
+### Description: Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing work item fields fetch
+### Details:
+After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios
+

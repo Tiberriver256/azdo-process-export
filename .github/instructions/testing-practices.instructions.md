@@ -1,7 +1,6 @@
 ---
 description: Testing practices and guidelines for this project - BDD testing only, no unit testing
 applyTo: '**'
-alwaysApply: true
 ---
 
 # Testing Practices

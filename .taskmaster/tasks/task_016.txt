@@ -1,0 +1,25 @@
+# Task ID: 16
+# Title: Fetch Work Item Types from Azure DevOps REST APIs
+# Status: pending
+# Dependencies: 5, 3
+# Priority: high
+# Description: Implement functionality to retrieve work item type definitions from Azure DevOps, including fields, states, and rules using the /wit/workitemtypes endpoint.
+# Details:
+Create a new module in /domain/work_item_types.py for domain objects representing work item types, fields, states, and rules. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /wit/workitemtypes endpoint. The implementation should fetch work item type definitions for a given project, including all associated metadata such as field definitions, workflow states, and business rules. Serialize API responses into strongly-typed domain objects with proper validation. Include comprehensive error handling for API failures, network issues, and malformed responses. Follow the established patterns from the existing HTTP client for authentication, logging, and resilience. Structure the code to support both individual work item type retrieval and bulk fetching of all types for a project.
+
+# Test Strategy:
+Write Behave scenarios in /features/work_item_types.feature to test fetching work item types from a real Azure DevOps project, including scenarios for successful retrieval, handling of missing work item types, and API error conditions. Create unit tests for domain object serialization and validation. Test error handling for network failures, authentication issues, and malformed API responses. Verify that the fetched work item type data includes all required fields (name, description, fields, states, rules) and that the domain objects properly represent the Azure DevOps work item type schema.
+
+# Subtasks:
+## 1. Research: Work Item Types APIs [pending]
+### Dependencies: None
+### Description: Research Azure DevOps REST APIs for work item types using Microsoft docs and azure-devops library documentation
+### Details:
+Use microsoft_docs_search and get-library-docs to understand work item types endpoints, response schemas, and best practices
+
+## 2. Plan: Work Item Types Implementation [pending]
+### Dependencies: 16.1
+### Description: Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing work item types fetch
+### Details:
+After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios
+

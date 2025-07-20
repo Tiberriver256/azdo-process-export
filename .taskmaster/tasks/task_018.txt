@@ -1,0 +1,25 @@
+# Task ID: 18
+# Title: Fetch Process Behaviors from Azure DevOps REST APIs
+# Status: pending
+# Dependencies: 5, 3, 4
+# Priority: high
+# Description: Implement functionality to retrieve process behavior configurations from Azure DevOps using the /processes/{processId}/behaviors endpoint, including state transitions, business rules, and process customizations.
+# Details:
+Create a new module in /domain/process_behaviors.py for domain objects representing process behaviors, including ProcessBehavior, StateTransition, BusinessRule, and ProcessCustomization classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /processes/{processId}/behaviors endpoint. The implementation should fetch behavior configurations for a given process ID, including state transition rules, field validation rules, and custom process behaviors. Serialize API responses into strongly-typed domain objects with proper validation. Handle API pagination if the behaviors endpoint supports it. Include proper error handling for common scenarios like invalid process IDs (404), unauthorized access (401/403), and API rate limiting (429). Use the existing async HTTP client patterns established in the codebase for consistency. Add logging for API calls and error conditions using the structured logging framework already in place.
+
+# Test Strategy:
+Write Behave scenarios in /features/process_behaviors.feature to test fetching process behaviors from a real Azure DevOps organization, including scenarios for successful retrieval of behaviors for valid process IDs, handling of invalid or non-existent process IDs (404 errors), authentication failures (401/403), API rate limiting (429), and server errors (500). Create unit tests for domain object serialization and validation of ProcessBehavior, StateTransition, and BusinessRule classes. Test edge cases such as processes with no custom behaviors, processes with complex state transition rules, and proper handling of API pagination. Verify that the structured logging output contains appropriate context for debugging API interactions and errors.
+
+# Subtasks:
+## 1. Research: Process Behaviors APIs [pending]
+### Dependencies: None
+### Description: Research Azure DevOps REST APIs for process behaviors using Microsoft docs and azure-devops library documentation
+### Details:
+Use microsoft_docs_search and get-library-docs to understand behaviors endpoints, process configurations, and retrieval patterns
+
+## 2. Plan: Process Behaviors Implementation [pending]
+### Dependencies: 18.1
+### Description: Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing process behaviors fetch
+### Details:
+After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios
+

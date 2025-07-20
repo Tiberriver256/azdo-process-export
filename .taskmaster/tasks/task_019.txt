@@ -1,0 +1,25 @@
+# Task ID: 19
+# Title: Fetch Teams from Azure DevOps REST APIs
+# Status: pending
+# Dependencies: 5, 3
+# Priority: high
+# Description: Implement functionality to retrieve team information from Azure DevOps using the /core/teams endpoint, including team members, settings, and configurations.
+# Details:
+Create a new module in /domain/teams.py for domain objects representing teams, including Team, TeamMember, TeamSettings, and TeamConfiguration classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /core/teams endpoint. The implementation should fetch team information for a given project, including team metadata, member lists with roles and permissions, team settings such as backlog navigation levels and bug behavior, and team configurations like area paths and iteration paths. Serialize API responses into strongly-typed domain objects with proper validation. Handle pagination for large team member lists and implement proper error handling for common scenarios like unauthorized access, non-existent teams, and API rate limiting. Include support for filtering teams by project scope and retrieving detailed member information including user identities, roles, and team-specific permissions.
+
+# Test Strategy:
+Write Behave scenarios in /features/teams.feature to test fetching teams from a real Azure DevOps project, including scenarios for successful retrieval of all teams, fetching specific team details with members, handling of non-existent teams (404 errors), authentication failures (401/403), API rate limiting (429), and server errors (500). Create unit tests for domain object serialization and validation, ensuring proper handling of optional fields and edge cases. Test pagination scenarios with teams that have large member lists. Verify proper error messages are returned for invalid team IDs or project names. Include integration tests that validate the complete flow from API call to domain object creation.
+
+# Subtasks:
+## 1. Research: Teams APIs [pending]
+### Dependencies: None
+### Description: Research Azure DevOps REST APIs for teams using Microsoft docs and azure-devops library documentation
+### Details:
+Use microsoft_docs_search and get-library-docs to understand teams endpoints, team configurations, and member retrieval patterns
+
+## 2. Plan: Teams Implementation [pending]
+### Dependencies: 19.1
+### Description: Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing teams fetch
+### Details:
+After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios
+
