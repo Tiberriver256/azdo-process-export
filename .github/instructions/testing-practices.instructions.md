@@ -15,6 +15,8 @@ This project uses **Behavior-Driven Development (BDD) testing exclusively** with
 - **No Unit Tests**: This project deliberately does not use unit testing frameworks like pytest, unittest, or similar
 - **End-to-End Focus**: Tests validate complete user workflows and integration scenarios
 - **Real Environment**: Tests use actual Azure DevOps demo environments for authentic validation
+- **No Mocks**: Mocking is banned. All tests must use real implementations or real external services
+- **RED-GREEN-REFACTOR**: RED phase means tests fail because functionality doesn't exist, not because of mocks
 
 ## Testing Guidelines
 
@@ -74,6 +76,8 @@ uv run behave --dry-run
 - **Do not create test/ or tests/ directories** - use features/ only
 - **Do not write implementation-focused tests** - focus on user behavior
 - **Do not test internal functions** - test complete workflows
+- **Do not use mocks, stubs, or test doubles** - all tests must use real implementations
+- **Do not fake external dependencies** - use real Azure DevOps environments for testing
 
 ## Adding New Tests
 

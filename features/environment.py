@@ -20,6 +20,7 @@ def before_all(context):
     # Set default test organization and project
     context.test_organization = os.environ.get("AZDO_TEST_ORGANIZATION", "demo-org")
     context.test_project = os.environ.get("AZDO_TEST_PROJECT", "Demo Project")
+    context.test_project_id = os.environ.get("AZDO_TEST_PROJECT_ID", "demo-project-id")
     context.test_pat = os.environ.get("AZDO_TEST_PAT")
 
     # Initialize result tracking

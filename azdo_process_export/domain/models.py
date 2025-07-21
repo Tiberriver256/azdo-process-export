@@ -30,6 +30,16 @@ class WorkItemState(str, Enum):
 
 
 @dataclass
+class Collection:
+    """Azure DevOps project collection information."""
+
+    id: str
+    name: str
+    url: str
+    collection_url: str
+
+
+@dataclass
 class Project:
     """Azure DevOps project information."""
 
@@ -40,6 +50,8 @@ class Project:
     state: str | None = None
     revision: int | None = None
     visibility: str | None = None
+    collection: Collection | None = None
+    default_team: "Team | None" = None
 
 
 @dataclass
