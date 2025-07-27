@@ -416,15 +416,48 @@
       {
         "id": 6,
         "title": "Fetch Basic Project Metadata from Azure DevOps REST APIs",
-        "description": "Implement logic to fetch basic project information such as project details, properties, and configuration from Azure DevOps.",
+        "description": "Make the user-facing BDD scenario pass: 'As a delivery lead, I want to export basic project information from Azure DevOps so that I can understand the project structure and configuration'",
         "status": "in-progress",
         "dependencies": [
           5
         ],
         "priority": "high",
-        "details": "Use azure-devops==7.1.0 or direct REST calls via httpx. Focus on core project endpoints: /core/projects/{projectId} for project details and basic configuration. Serialize results into domain objects. Place logic in /domain/metadata.py.",
-        "testStrategy": "Behave scenarios for project metadata endpoint. Unit test response parsing and error handling for basic project information.",
+        "details": "Implement end-to-end functionality to make this scenario pass: Given I have access to an Azure DevOps project 'Demo Project' and valid authentication credentials, When I run 'azdo-process-export process 'Demo Project' --out project.json', Then the command should complete successfully and the output file should contain project name, description, and team information with structured logs showing project metadata retrieval.",
+        "testStrategy": "Single BDD scenario testing the complete user workflow from CLI command to JSON output file generation with project metadata.",
         "subtasks": [
+          {
+            "id": 4,
+            "title": "RED: Write failing end-to-end CLI scenario for project metadata export",
+            "description": "Create the main user-facing BDD scenario that tests the complete CLI workflow from command execution to JSON file output.",
+            "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "details": "Create a new BDD scenario in features/cli_integration.feature that captures the user story: 'Given I have access to an Azure DevOps project Demo Project and valid authentication credentials, When I run azdo-process-export process Demo Project --out project.json, Then the command should complete successfully and the output file should contain project name, description, and team information with structured logs showing project metadata retrieval.' This scenario should fail because the CLI integration doesn't exist yet. Focus only on the test, no implementation code.",
+            "testStrategy": "Single failing BDD scenario that represents the complete user workflow from CLI command to JSON output file generation"
+          },
+          {
+            "id": 5,
+            "title": "GREEN: Minimal CLI integration to make end-to-end scenario pass",
+            "description": "Do the absolute minimum implementation to make the failing CLI scenario pass end-to-end.",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "details": "Update cli/cli.py to integrate ProjectMetadataService with the 'process' command. Add the minimal code needed to: 1) Accept 'Demo Project' as project argument, 2) Accept --out parameter for JSON output file, 3) Call ProjectMetadataService to fetch project metadata, 4) Write basic JSON output to specified file, 5) Add basic structured logging. Focus on making it work, not making it perfect. Build upon existing authentication and logging infrastructure from completed tasks.",
+            "testStrategy": "Verify the end-to-end BDD scenario now passes with minimal implementation"
+          },
+          {
+            "id": 6,
+            "title": "REFACTOR: Clean up and optimize CLI integration implementation",
+            "description": "Refactor the minimal implementation for maintainability, performance, and production readiness.",
+            "status": "pending",
+            "dependencies": [
+              5
+            ],
+            "details": "Clean up the CLI integration code for production quality: 1) Improve error handling and edge cases, 2) Enhance structured logging with proper context and trace information, 3) Optimize JSON output format and file writing, 4) Add input validation and user-friendly error messages, 5) Ensure proper resource cleanup and exception handling, 6) Add comprehensive documentation and type hints. Ensure all existing tests still pass after refactoring.",
+            "testStrategy": "All BDD scenarios continue to pass after refactoring, with improved error handling and logging quality"
+          },
           {
             "id": 1,
             "title": "Create Project Domain Models",
@@ -456,280 +489,191 @@
             "details": "Implement ProjectMetadataService class with methods: get_project_by_id(), list_projects(). Use azure-devops==7.1.0 CoreClient for /core/projects/{projectId} endpoint. Handle authentication via Personal Access Token. Convert API responses to domain model objects. Follow dependency injection pattern for testability.\n<info added on 2025-07-21T00:19:01.883Z>\nImplementation successfully completed with real Azure DevOps integration using azure-devops library. Added BasicAuthentication with PAT support, CoreClient integration, and proper error handling mapping (404→ProjectNotFoundError, 401→AuthenticationError, 5xx→ServiceUnavailableError). Both get_project_by_id() and list_projects() methods implemented with domain model conversion. Tests now fail with ServiceUnavailableError instead of NotImplementedError, confirming real API integration is working with expected failures due to demo credentials. Ready for real environment testing.\n</info added on 2025-07-21T00:19:01.883Z>\n<info added on 2025-07-21T00:37:10.143Z>\nFinal implementation and testing complete with comprehensive BDD test coverage. Environment variable integration successfully implemented with context.test_organization, context.test_pat, and context.test_project_id configuration. Feature file updated to use business-friendly language (\"Given a test project exists\" vs hardcoded IDs). All 25 BDD steps now pass with real Azure DevOps API integration - no mocks used per project philosophy. Final test results: 1 feature passed, 3 scenarios passed, confirming production-ready implementation with proper error handling and environment-driven configuration.\n</info added on 2025-07-21T00:37:10.143Z>",
             "status": "done",
             "testStrategy": "Unit tests with mocked Azure DevOps client, integration tests with real API calls"
-          },
-          {
-            "id": 4,
-            "title": "Add Error Handling and Pagination",
-            "description": "Enhance ProjectMetadataService with robust error handling, retry logic, and pagination support for large project collections.",
-            "dependencies": [
-              "6.3"
-            ],
-            "details": "Add exception handling for authentication failures, network timeouts, and API rate limits. Implement exponential backoff retry strategy using tenacity library. Support pagination for list_projects() using continuation tokens. Create custom exceptions: ProjectNotFoundError, AuthenticationError, ServiceUnavailableError.",
-            "status": "pending",
-            "testStrategy": "Unit tests for error scenarios, pagination edge cases, and retry logic behavior"
-          },
-          {
-            "id": 5,
-            "title": "Integrate with CLI",
-            "description": "Connect the ProjectMetadataService to the CLI interface and update existing command flows to include project metadata functionality.",
-            "dependencies": [
-              "6.3",
-              "6.4"
-            ],
-            "details": "Update cli/cli.py to instantiate ProjectMetadataService. Add project metadata to main export flow. Integrate with existing structured logging from Task 4. Ensure proper dependency injection and configuration management. Update help text and command descriptions.",
-            "status": "pending",
-            "testStrategy": "End-to-end Behave scenarios testing CLI integration, validation of JSON output structure"
           }
         ]
       },
       {
         "id": 7,
         "title": "Fetch Activity Metrics via OData Analytics v4",
-        "description": "Query OData Analytics endpoints for monthly aggregates of work items, PRs, and pipeline runs.",
-        "details": "Use httpx async client for OData queries. Endpoints: WorkItemsSnapshot, WorkItemRevisions, PullRequestEvents, /pipelines/{id}/runs. Aggregate by month using pandas==2.2.2 for in-memory grouping. Place logic in /domain/metrics.py.",
-        "testStrategy": "Behave scenarios for metrics collection. Unit test aggregation logic and error handling.",
-        "priority": "high",
+        "description": "Make the user-facing BDD scenario pass: 'As a process coach, I want to export activity metrics from Azure DevOps so that I can analyze team productivity trends and identify bottlenecks'",
+        "status": "pending",
         "dependencies": [
           5
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "Implement end-to-end functionality to make this scenario pass: Given I have access to an Azure DevOps project with historical data and valid Analytics permissions, When I run 'azdo-process-export process 'Analytics Project' --out metrics.json', Then the command should complete successfully, the output file should contain monthly work item, PR, and pipeline run metrics, and the structured logs should show Analytics data retrieval. Use httpx async client for OData queries. Endpoints: WorkItemsSnapshot, WorkItemRevisions, PullRequestEvents, /pipelines/{id}/runs. Aggregate by month using pandas==2.2.2 for in-memory grouping. Place logic in /domain/metrics.py.",
+        "testStrategy": "Single BDD scenario testing the complete user workflow from CLI command to JSON output file generation with activity metrics.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Scenario 1: Write failing test for OData Analytics connection",
-            "description": "Create a Behave scenario testing basic OData Analytics connection and verify it fails initially.",
-            "details": "",
+            "title": "RED: Write failing BDD scenario for activity metrics export",
+            "description": "Create the Behave scenario for the user story ensuring it fails because OData Analytics functionality doesn't exist yet.",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 7
+            "details": "Create features/activity_metrics.feature with the scenario 'Export activity metrics successfully'. Define step definitions in features/steps/activity_metrics_steps.py. Include Given (Azure DevOps project with historical data and Analytics permissions), When (run CLI command 'azdo-process-export process Analytics Project --out metrics.json'), Then (verify successful completion, output file contents with monthly metrics, and structured logs showing Analytics data retrieval). Ensure the test fails because no OData Analytics implementation exists. No implementation code - just the failing test following strict TDD RED phase.",
+            "testStrategy": ""
           },
           {
             "id": 2,
-            "title": "Implement 1: Make OData connection scenario pass",
-            "description": "Implement minimal OData Analytics connection to make the basic scenario pass.",
-            "details": "",
+            "title": "GREEN: Minimal OData Analytics implementation to make scenario pass",
+            "description": "Do the absolute minimum implementation to make the BDD scenario pass, focusing on making it work rather than perfect.",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 7
+            "details": "Implement minimal ActivityMetricsService class in domain/metrics.py with basic OData queries for work items, PRs, and pipeline metrics. Use httpx async client for simple queries to WorkItemsSnapshot, WorkItemRevisions, PullRequestEvents, and /pipelines/{id}/runs endpoints. Create basic monthly aggregation using pandas==2.2.2. Connect to CLI 'process' command to generate metrics.json output. Build upon existing authentication infrastructure from completed Task 3. Focus solely on making the BDD scenario pass - no error handling, pagination, or optimization yet.",
+            "testStrategy": ""
           },
           {
             "id": 3,
-            "title": "Refactor 1: Clean up OData connection",
-            "description": "Refactor OData connection implementation while keeping tests green.",
-            "details": "",
+            "title": "REFACTOR: Clean up and optimize the Analytics implementation",
+            "description": "Refactor the minimal implementation for maintainability, performance, and production readiness while ensuring all tests still pass.",
             "status": "pending",
             "dependencies": [
               2
             ],
-            "parentTaskId": 7
-          },
-          {
-            "id": 4,
-            "title": "Scenario 2: Write failing test for work items aggregates",
-            "description": "Create a Behave scenario testing work items monthly aggregates query and verify it fails initially.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              3
-            ],
-            "parentTaskId": 7
-          },
-          {
-            "id": 5,
-            "title": "Implement 2: Make work items aggregates scenario pass",
-            "description": "Implement work items monthly aggregates query to make the scenario pass.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              4
-            ],
-            "parentTaskId": 7
-          },
-          {
-            "id": 6,
-            "title": "Refactor 2: Clean up work items aggregates",
-            "description": "Refactor work items aggregates implementation while keeping tests green.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              5
-            ],
-            "parentTaskId": 7
-          },
-          {
-            "id": 7,
-            "title": "Scenario 3: Write failing test for PRs and pipeline aggregates",
-            "description": "Create a Behave scenario testing PRs and pipeline runs monthly aggregates and verify it fails initially.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              6
-            ],
-            "parentTaskId": 7
-          },
-          {
-            "id": 8,
-            "title": "Implement 3: Make PRs and pipeline aggregates scenario pass",
-            "description": "Implement PRs and pipeline runs monthly aggregates query to make the scenario pass.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              7
-            ],
-            "parentTaskId": 7
-          },
-          {
-            "id": 9,
-            "title": "Refactor 3: Final cleanup for production readiness",
-            "description": "Final refactor of complete OData Analytics implementation for production readiness while ensuring all tests remain green.",
-            "details": "",
-            "status": "pending",
-            "dependencies": [
-              8
-            ],
-            "parentTaskId": 7
+            "details": "Refactor the working Analytics implementation for production quality. Add proper error handling for API failures and network timeouts. Implement pagination for large datasets. Optimize aggregation logic and memory usage. Add comprehensive structured logging for Analytics data retrieval progress. Improve code organization and separation of concerns. Add input validation and edge case handling. Ensure the BDD scenario and any additional tests continue to pass after refactoring. Focus on maintainability, performance, and robustness.",
+            "testStrategy": ""
           }
         ]
       },
       {
         "id": 8,
         "title": "Enrich Users via Microsoft Graph API",
-        "description": "Lookup Azure DevOps identities in Microsoft Graph to fetch job title and mail, and annotate usage patterns.",
-        "details": "Use msgraph-core==1.0.0 and httpx for Graph API calls. For each unique user ID, fetch /users/{id}. Annotate users with PR-heavy or work-item-heavy based on metrics. Place enrichment logic in /domain/user_enrichment.py.",
-        "testStrategy": "Behave scenarios for user enrichment. Unit test Graph API integration and annotation logic.",
-        "priority": "medium",
+        "description": "Lookup Azure DevOps identities in Microsoft Graph to fetch job title and mail, and annotate usage patterns to enable correlation of activity with team member roles.",
+        "status": "pending",
         "dependencies": [
           6,
           7
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "Implement Microsoft Graph integration to make the user-facing BDD scenario pass. Use msgraph-core==1.0.0 and httpx for Graph API calls. For each unique user ID, fetch /users/{id} to get job title and email. Annotate users with activity patterns (PR-heavy or work-item-heavy) based on metrics. Place enrichment logic in /domain/user_enrichment.py. Focus on enabling data analysts to correlate activity patterns with team member roles and responsibilities.",
+        "testStrategy": "Single BDD scenario: 'Export enriched user information successfully' - validates that azdo-process-export command produces output with enriched user data including job titles, email addresses, and activity pattern annotations.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Scenario 1: Write failing test for Graph API user lookup",
-            "description": "Create a Behave scenario testing basic Microsoft Graph API user lookup and verify it fails initially.",
-            "details": "",
+            "title": "RED: Write failing BDD scenario for enriched user export",
+            "description": "Create the Behave scenario that defines the expected behavior for user enrichment functionality.",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 8
+            "details": "Create the BDD scenario 'Export enriched user information successfully' that tests the complete user workflow. The scenario should fail initially because Graph API functionality doesn't exist yet. Focus only on writing the test specification, not implementation code.",
+            "testStrategy": "Verify the scenario fails with clear error indicating missing Graph API integration"
           },
           {
             "id": 2,
-            "title": "Implement 1: Make user lookup scenario pass and refactor",
-            "description": "Implement minimal Graph API user lookup to make scenario pass, then refactor for maintainability.",
-            "details": "",
+            "title": "GREEN: Minimal Graph API implementation to make scenario pass",
+            "description": "Implement the absolute minimum Graph API functionality required to make the BDD scenario pass.",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 8
+            "details": "Create basic Microsoft Graph API integration in /domain/user_enrichment.py using msgraph-core==1.0.0 and httpx. Implement minimal user lookup by ID to fetch job title and email. Focus on making the BDD scenario pass with the simplest possible implementation.",
+            "testStrategy": "Verify the BDD scenario now passes with basic enriched user data in output"
           },
           {
             "id": 3,
-            "title": "Scenario 2: Enrichment scenario, implement, and final refactor",
-            "description": "Create scenario for job title and mail enrichment, implement to pass, then refactor for production readiness.",
-            "details": "",
+            "title": "REFACTOR: Clean up and optimize the user enrichment implementation",
+            "description": "Refactor the user enrichment implementation for maintainability, performance, and completeness.",
             "status": "pending",
             "dependencies": [
               2
             ],
-            "parentTaskId": 8
+            "details": "Add proper error handling, caching, and activity pattern annotation logic (PR-heavy vs work-item-heavy). Optimize Graph API calls, improve code structure, and ensure robust integration with the export command workflow. Maintain all existing test coverage.",
+            "testStrategy": "Verify all tests still pass after refactoring and enriched data quality is improved"
           }
         ]
       },
       {
         "id": 9,
         "title": "Serialize Domain Objects to JSON with orjson",
-        "description": "Serialize all collected domain objects into a single portable JSON file using orjson.",
-        "details": "Use orjson==3.9.10 for fast serialization. Ensure output matches published schema and is ≤50 MB for typical projects. Place serialization logic in /infrastructure/serialization.py.",
-        "testStrategy": "Unit test serialization for schema compliance and file size. Behave scenario for end-to-end export.",
-        "priority": "high",
+        "description": "Implement JSON serialization with orjson to enable generation of a complete portable JSON export containing all Azure DevOps project data.",
+        "status": "pending",
         "dependencies": [
           6,
           7,
           8
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "Make the user-facing BDD scenario pass: 'Generate complete portable JSON export'. Use orjson==3.9.10 for fast serialization. Ensure output matches published schema and is ≤50 MB for typical projects. Place serialization logic in /infrastructure/serialization.py. The JSON should contain project metadata, activity metrics, and user information in a portable, self-contained format.",
+        "testStrategy": "Implement the BDD scenario: 'Given I have access to an Azure DevOps project with full data, When I run \"azdo-process-export process 'Complete Project' --out complete.json\", Then the command should complete successfully, And the output file should be a valid JSON under 50MB, And the JSON should contain project metadata, activity metrics, and user information, And the file should be portable and self-contained.'",
         "subtasks": [
           {
             "id": 1,
-            "title": "Scenario 1: Write failing test for JSON serialization",
-            "description": "Create a Behave scenario testing basic JSON serialization with orjson and verify it fails initially.",
-            "details": "",
+            "title": "Write failing BDD scenario for complete JSON export (RED)",
+            "description": "Create the Behave scenario for the user story that demonstrates generating a complete portable JSON export. This test should fail because JSON serialization doesn't exist yet.",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 9
+            "details": "Write failing BDD scenario: 'Generate complete portable JSON export' with steps covering command execution, file validation, size constraints, and content verification. Ensure it fails because JSON serialization is not implemented. No implementation code, just the failing test.",
+            "testStrategy": "Verify the scenario fails with appropriate error indicating missing JSON serialization functionality."
           },
           {
             "id": 2,
-            "title": "Implement 1: Make serialization scenario pass and refactor",
-            "description": "Implement basic orjson serialization to make scenario pass, then refactor for maintainability.",
-            "details": "",
+            "title": "Minimal orjson implementation to make scenario pass (GREEN)",
+            "description": "Implement the absolute minimum JSON serialization functionality using orjson to make the BDD scenario pass, focusing only on making it work.",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 9
+            "details": "Do the minimum to make the BDD scenario pass. Basic JSON serialization of domain objects using orjson==3.9.10. Implement in /infrastructure/serialization.py. Focus on making it work, not perfect - just get the test passing.",
+            "testStrategy": "Verify the BDD scenario now passes with basic JSON output containing required data elements."
           },
           {
             "id": 3,
-            "title": "Scenario 2: Complete serialization scenario, implement, and final refactor",
-            "description": "Create scenario for complete domain objects serialization, implement to pass, then final refactor for production.",
-            "details": "",
+            "title": "Clean up and optimize JSON serialization (REFACTOR)",
+            "description": "Refactor the JSON serialization implementation for maintainability, performance, and compliance while ensuring all tests still pass.",
             "status": "pending",
             "dependencies": [
               2
             ],
-            "parentTaskId": 9
+            "details": "Refactor for maintainability and performance. Add schema compliance, size optimization (≤50 MB), proper error handling, and ensure portable, self-contained format. All tests must still pass after refactoring.",
+            "testStrategy": "Verify all existing tests pass and output meets quality standards: valid JSON, under 50MB, contains all required sections, and is properly structured."
           }
         ]
       },
       {
         "id": 10,
         "title": "Implement Error Handling and Exit Codes",
-        "description": "Handle errors per PRD: fatal exit for Analytics root unreachable, warnings for partial fetch failures, credential errors.",
-        "details": "Centralize error handling in /cli/cli.py. Map scenarios to exit codes: 0 (success), 1 (partial), 2 (fatal Analytics error). Emit warnings array in JSON output. Log errors with context.",
-        "testStrategy": "Behave scenarios for each error case. Unit test exit code logic and warning emission.",
-        "priority": "high",
+        "description": "As a user, I want clear error messages and appropriate exit codes when something goes wrong so that I can troubleshoot issues and understand the tool's status.",
+        "status": "pending",
         "dependencies": [
           6,
           7,
           9
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "Implement proper error handling and exit codes to make BDD scenarios pass. Handle authentication failures with exit code 2 and clear error messages. Handle partial data failures with exit code 1, warnings, and structured output. Centralize error handling in /cli/cli.py with structured logging context.",
+        "testStrategy": "Two primary BDD scenarios: 1) Authentication failure handling with invalid credentials, 2) Partial data failure handling with limited permissions. Verify exit codes, error messages, and structured JSON output with warnings array.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Scenario 1: Write failing test for credential error handling",
-            "description": "Create a Behave scenario testing credential error handling and verify it fails initially.",
-            "details": "",
+            "title": "RED: Write failing BDD scenario for CLI output file",
+            "description": "Create the Behave scenario that validates CLI file output behavior and ensure it fails because file output handling doesn't exist.",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 10
+            "details": "Create a BDD scenario that tests the CLI's --out parameter functionality for writing export results to a file. The scenario should validate that the CLI can write structured JSON output with error handling information to a specified file path. Focus on the CLI user experience rather than implementation details. This test should fail initially because file output handling is not yet implemented.",
+            "testStrategy": "Write a failing Behave scenario that expects file output functionality to work but will fail due to missing implementation."
           },
           {
             "id": 2,
-            "title": "Implement 1: Make credential error scenario pass and refactor",
-            "description": "Implement credential error handling to make scenario pass, then refactor.",
-            "details": "",
+            "title": "GREEN: Minimal file output handling to make scenario pass",
+            "description": "Implement the absolute minimum file output handling with --out parameter to make the BDD scenario pass.",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 10
+            "details": "Add basic file writing functionality to the CLI with --out parameter support. Implement only what's necessary to make the BDD scenario pass - basic file writing without robust error handling or path validation. Focus on making the test pass rather than creating a perfect implementation.",
+            "testStrategy": "Ensure the BDD scenario from subtask 1 passes with minimal implementation."
           },
           {
             "id": 3,
-            "title": "Scenario 2: Analytics and partial failure scenarios, implement, and final refactor",
-            "description": "Create scenarios for Analytics root unreachable and partial fetch failures, implement, then final refactor.",
-            "details": "",
+            "title": "REFACTOR: Clean up file output implementation",
+            "description": "Refactor the file output implementation for robustness and proper error handling while ensuring all tests still pass.",
             "status": "pending",
             "dependencies": [
               2
             ],
-            "parentTaskId": 10
+            "details": "Enhance the basic file output implementation with proper error handling, path validation, permissions checking, and cleanup mechanisms. Add comprehensive error handling for file system operations, validate output paths, handle permission errors gracefully, and ensure proper resource cleanup. Maintain backward compatibility and ensure all existing tests continue to pass.",
+            "testStrategy": "Verify that all BDD scenarios continue to pass after refactoring, and add additional edge case testing for robust file handling."
           }
         ]
       },
@@ -737,80 +681,89 @@
         "id": 11,
         "title": "Implement --skip-metrics Option",
         "description": "Support CLI option to export configuration only, skipping all Analytics queries.",
-        "details": "Add --skip-metrics flag to CLI. Bypass metrics collection logic if set. Ensure output JSON omits metrics section when skipped.",
-        "testStrategy": "Behave scenario for --skip-metrics. Unit test output structure.",
-        "priority": "medium",
+        "status": "pending",
         "dependencies": [
           2,
           6,
           9,
           10
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "As a user, I want to export only configuration data without metrics when I need fast results or don't have Analytics permissions. Implement --skip-metrics flag to CLI that bypasses metrics collection logic and ensures output JSON omits metrics section when skipped.",
+        "testStrategy": "Single BDD scenario: Export configuration only with --skip-metrics. Verify command completes successfully in under 30 seconds, output contains project configuration without metrics, and structured logs show metrics collection was skipped.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Scenario 1: Write failing test for --skip-metrics option",
-            "description": "Create a Behave scenario testing --skip-metrics option and verify it fails initially.",
-            "details": "",
+            "title": "Write failing BDD scenario for complete CLI workflow",
+            "description": "Create the Behave scenario for the complete end-to-end workflow with --skip-metrics flag.",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 11
+            "details": "Create BDD scenario: Given I have access to an Azure DevOps project and may not have Analytics permissions, when I run 'azdo-process-export process Config Project --skip-metrics --out config.json', then the command should complete successfully in under 30 seconds, output file should contain project configuration without metrics, and structured logs should show metrics collection was skipped. Ensure it fails because full integration doesn't exist yet.",
+            "testStrategy": "Focus on the complete user journey from command execution to JSON file output validation."
           },
           {
             "id": 2,
-            "title": "Implement 1: Make skip-metrics scenario pass and final refactor",
-            "description": "Implement --skip-metrics option to make scenario pass, then refactor for maintainability and production readiness.",
-            "details": "",
+            "title": "Minimal integration to make end-to-end scenario pass",
+            "description": "Do the absolute minimum to connect all components and make the complete workflow work.",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 11
+            "details": "Implement basic CLI flag parsing for --skip-metrics, integrate existing authentication and configuration services, bypass metrics collection when flag is set, ensure JSON output omits metrics section, and add structured logging to indicate metrics were skipped. Focus on making the complete workflow functional.",
+            "testStrategy": "Verify the BDD scenario passes with minimal viable implementation."
+          },
+          {
+            "id": 3,
+            "title": "Optimize and improve the integration",
+            "description": "Refactor for performance, maintainability, and robustness while ensuring all tests still pass.",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "details": "Add proper error handling for edge cases, optimize performance for large configurations, improve code structure and maintainability, enhance monitoring and observability, and ensure robust handling of various project configurations. All existing tests must continue to pass.",
+            "testStrategy": "Run full test suite to ensure no regressions and validate performance improvements."
           }
         ]
       },
       {
         "id": 12,
         "title": "Publish and Version JSON Schema",
-        "description": "Publish the JSON schema for the export artefact and version it for downstream consumers.",
-        "details": "Define schema in /infrastructure/schema.json. Use jsonschema==4.22.0 for validation. Publish schema to repository and document versioning strategy.",
-        "testStrategy": "Unit test schema validation. Behave scenario for schema compliance.",
-        "priority": "medium",
+        "description": "As a downstream tool developer, I want access to a versioned JSON schema for the export file so that I can build automated processing tools that validate the data structure and adapt to schema changes.",
+        "status": "pending",
         "dependencies": [
           9
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "Implement BDD scenario: Given I have successfully exported project data to a JSON file, When I request the JSON schema for the export format, Then I should receive a valid JSON schema document that validates the exported JSON structure, includes version information for compatibility tracking, and is accessible via a documented URI or file location. Define schema in /infrastructure/schema.json using jsonschema==4.22.0 for validation.",
+        "testStrategy": "Implement Behave scenario testing schema accessibility and validation capabilities. Verify schema validates exported JSON structure and includes proper versioning information for downstream tool compatibility.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Scenario 1: Write failing test for JSON schema publishing",
-            "description": "Create a Behave scenario testing JSON schema publishing and verify it fails initially.",
-            "details": "",
+            "title": "Scenario 1: Write failing BDD test for schema access and validation",
+            "description": "Create a Behave scenario testing that downstream developers can access a versioned JSON schema that validates exported data structure.",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 12
+            "details": "Implement the BDD scenario: Given I have successfully exported project data to a JSON file, When I request the JSON schema for the export format, Then I should receive a valid JSON schema document, And the schema should validate the exported JSON structure, And the schema should include version information for compatibility tracking, And the schema should be accessible via a documented URI or file location.",
+            "testStrategy": ""
           },
           {
             "id": 2,
-            "title": "Implement 1: Make schema publishing scenario pass and final refactor",
-            "description": "Implement JSON schema publishing to make scenario pass, then refactor for versioning and production readiness.",
-            "details": "",
+            "title": "Implement 1: Make schema access scenario pass with versioning strategy",
+            "description": "Implement JSON schema publishing with version information to make the BDD scenario pass, enabling downstream tool development.",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 12
+            "details": "Create /infrastructure/schema.json with versioned schema that validates exported JSON structure. Ensure schema is accessible and includes compatibility tracking information for downstream tool developers.",
+            "testStrategy": ""
           }
         ]
       },
       {
         "id": 13,
         "title": "Acceptance Test Suite with Behave",
-        "description": "Develop BDD acceptance tests mapping each requirement to Gherkin scenarios, executed against ephemeral Azure DevOps org.",
-        "details": "Use behave==1.2.6 for BDD. Place features in /features. Automate ephemeral org setup in CI using azdo-demo-org. Map each PRD requirement to a scenario.",
-        "testStrategy": "Run Behave suite in CI. Ensure all scenarios pass and failures are logged with rich context.",
-        "priority": "high",
+        "description": "Develop comprehensive BDD acceptance test infrastructure using behave==1.2.6 to validate CLI functionality against live Azure DevOps environments. This technical infrastructure task supports validation of all user-facing functionality through automated testing.",
+        "status": "pending",
         "dependencies": [
           1,
           2,
@@ -825,175 +778,276 @@
           11,
           12
         ],
-        "status": "pending",
+        "priority": "high",
+        "details": "Implement technical infrastructure for BDD acceptance testing using behave==1.2.6 that executes against ephemeral Azure DevOps organizations. Tests must validate real API interactions without mocks, provide detailed failure feedback, and support validation of all CLI requirements. Place features in /features directory and integrate with azdo-demo-org for ephemeral org provisioning.",
+        "testStrategy": "Given the behave test infrastructure is implemented, When executing the test suite against ephemeral Azure DevOps organizations, Then all technical components should function correctly including org provisioning, API interactions, step definitions, and failure reporting mechanisms.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Extract PRD Requirements for Test Mapping",
-            "description": "Review the Product Requirements Document (PRD) and extract all requirements that need to be mapped to acceptance tests.",
-            "dependencies": [],
-            "details": "Gather and document each PRD requirement to ensure comprehensive coverage in the test suite.",
+            "title": "Setup Behave Framework Structure",
+            "description": "Initialize behave==1.2.6 framework with proper directory structure and configuration files.",
             "status": "pending",
-            "testStrategy": "Verify all PRD requirements are listed and none are omitted."
+            "dependencies": [],
+            "details": "Create /features directory structure, configure behave.ini, and set up step definitions directory with proper Python imports.",
+            "testStrategy": "Verify behave can discover and execute basic test scenarios; confirm directory structure follows behave conventions."
           },
           {
             "id": 2,
-            "title": "Author Gherkin Scenarios for Each Requirement",
-            "description": "Write Gherkin scenarios in .feature files for each PRD requirement, ensuring clarity and traceability.",
+            "title": "Implement Core Step Definition Framework",
+            "description": "Develop reusable step definition framework for CLI command execution, file operations, and API validation.",
+            "status": "pending",
             "dependencies": [
               1
             ],
-            "details": "Place all .feature files in the /features directory, with each scenario clearly mapped to its corresponding requirement.",
-            "status": "pending",
-            "testStrategy": "Review scenarios for completeness and direct mapping to requirements; peer review for Gherkin syntax."
+            "details": "Create base step definitions in /features/steps for common operations like CLI execution, JSON parsing, file validation, and error checking.",
+            "testStrategy": "Unit test step definitions for correctness; ensure all common patterns are covered and reusable."
           },
           {
             "id": 3,
-            "title": "Implement Behave Step Definitions",
-            "description": "Develop Python step definitions for all Gherkin scenarios using behave==1.2.6.",
+            "title": "Integrate Ephemeral Azure DevOps Org Provisioning",
+            "description": "Implement azdo-demo-org integration for automatic provisioning and teardown of test organizations.",
+            "status": "pending",
             "dependencies": [
               2
             ],
-            "details": "Ensure step definitions are modular, reusable, and placed in the appropriate /features/steps directory.",
-            "status": "pending",
-            "testStrategy": "Unit test step definitions for correctness; ensure all steps are covered and executable."
+            "details": "Configure before/after hooks in behave to create and destroy ephemeral Azure DevOps organizations for each test run, ensuring isolation.",
+            "testStrategy": "Validate org creation and cleanup in test logs; ensure no residual resources remain after test execution."
           },
           {
             "id": 4,
-            "title": "Automate Ephemeral Azure DevOps Org Setup in CI",
-            "description": "Integrate azdo-demo-org into CI to provision and tear down ephemeral Azure DevOps organizations for test execution.",
+            "title": "Implement Real API Interaction Testing",
+            "description": "Configure test framework to execute against live Azure DevOps APIs without mocking for authentic validation.",
+            "status": "pending",
             "dependencies": [
               3
             ],
-            "details": "Configure CI pipeline to automatically create and destroy orgs for each test run, ensuring isolation and repeatability.",
-            "status": "pending",
-            "testStrategy": "Validate org setup and teardown in CI logs; ensure no residual resources remain post-test."
+            "details": "Ensure all test scenarios make real API calls against ephemeral organizations, validating actual API responses and behavior.",
+            "testStrategy": "Verify no mock libraries are used; confirm all API interactions are against live endpoints with real authentication."
           },
           {
             "id": 5,
-            "title": "Execute and Validate Behave Suite in CI",
-            "description": "Run the Behave acceptance test suite in CI against the ephemeral Azure DevOps org, capturing and reporting results.",
+            "title": "Develop Comprehensive Failure Reporting",
+            "description": "Implement detailed failure feedback mechanism that captures CLI output, API responses, and environment state.",
+            "status": "pending",
             "dependencies": [
               4
             ],
-            "details": "Ensure all scenarios are executed, failures are logged with rich context, and results are published as CI artefacts.",
+            "details": "Enhance behave reporting with rich logging that captures full context on failures, including API response details and CLI command output.",
+            "testStrategy": "Verify failure reports contain actionable debugging information including API responses, CLI output, and environment state."
+          },
+          {
+            "id": 6,
+            "title": "Create Feature Files for Core CLI Functions",
+            "description": "Author Gherkin feature files that cover all CLI functionality including authentication, project export, and error handling.",
             "status": "pending",
-            "testStrategy": "Confirm all scenarios pass; verify failure logs contain detailed context; ensure artefacts are accessible."
+            "dependencies": [
+              2
+            ],
+            "details": "Write .feature files in /features directory covering authentication flows, project metadata export, process behaviors, and error scenarios.",
+            "testStrategy": "Review feature files for completeness; ensure all CLI functions have corresponding Gherkin scenarios."
+          },
+          {
+            "id": 7,
+            "title": "Integrate Test Suite with CI Pipeline",
+            "description": "Configure CI integration to execute behave test suite against ephemeral organizations and publish results.",
+            "status": "pending",
+            "dependencies": [
+              5,
+              6
+            ],
+            "details": "Set up CI pipeline to run 'uv run behave' command, manage ephemeral org lifecycle, and publish test artifacts with detailed results.",
+            "testStrategy": "Confirm test suite executes in CI; verify ephemeral org management works in automated environment; ensure test results are published."
           }
         ]
       },
       {
         "id": 14,
         "title": "Continuous Integration Setup",
-        "description": "Configure CI pipeline to run tests, Behave acceptance suite, and measure runtime and file size metrics.",
-        "details": "Use GitHub Actions or Azure Pipelines. Steps: lint (ruff), unit tests (pytest), Behave acceptance, runtime/file size checks. Publish logs and artefacts. Place CI config in /.github/workflows/ci.yml.",
-        "testStrategy": "Verify CI runs on PR and main. Ensure artefacts and logs are published. Behave failures block merge.",
-        "priority": "medium",
+        "description": "Configure automated CI pipeline to validate code quality, execute tests, and measure performance metrics for reliable code delivery.",
+        "status": "pending",
         "dependencies": [
           13
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "Implement GitHub Actions or Azure Pipelines CI configuration that runs: ruff linting for code quality, pytest for unit tests, Behave acceptance test suite, and performance checks for runtime (< 5 min) and file size (< 50 MB) metrics. Pipeline should block merges on any failures to maintain code quality gates.",
+        "testStrategy": "Verify CI pipeline executes all validation steps: linting passes with zero violations, unit tests pass, Behave acceptance tests complete successfully, performance metrics meet targets, and merge protection prevents failing code from being merged.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Scenario 1: Write failing test for CI pipeline",
-            "description": "Create a Behave scenario testing CI pipeline setup and verify it fails initially.",
-            "details": "",
+            "title": "Scenario 1: Write failing test for automated validation pipeline",
+            "description": "Create a Behave scenario testing that the CI pipeline validates code quality, runs acceptance tests, and measures performance metrics, verifying it fails initially without CI configuration.",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 14
+            "details": "Write BDD scenario covering: code linting validation, acceptance test execution against live Azure DevOps, performance metrics collection, artifact publishing, and merge blocking on failures.",
+            "testStrategy": ""
           },
           {
             "id": 2,
-            "title": "Implement 1: Make CI pipeline scenario pass and final refactor",
-            "description": "Implement CI pipeline configuration to make scenario pass, then refactor for metrics collection and production readiness.",
-            "details": "",
+            "title": "Implement 1: Configure CI pipeline workflow",
+            "description": "Implement CI pipeline configuration (GitHub Actions or Azure Pipelines) to execute validation steps and enforce quality gates.",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 14
+            "details": "Create CI configuration with jobs for: ruff linting, pytest unit tests, Behave acceptance test suite, runtime and file size performance checks, and merge protection rules. Ensure pipeline blocks merges on any step failures.",
+            "testStrategy": ""
           }
         ]
       },
       {
         "id": 15,
         "title": "Documentation and CLI Help Verification",
-        "description": "Document usage, options, error codes, and ensure CLI help matches PRD requirements.",
-        "details": "Update README.md with usage, options, error handling, and schema info. Verify Click auto-generated help matches PRD. Document authentication precedence and troubleshooting.",
-        "testStrategy": "Manual review of documentation. Behave scenario for --help output. Validate README completeness.",
-        "priority": "medium",
+        "description": "Implement comprehensive documentation and CLI help system infrastructure to support user onboarding and provide technical reference materials for the Azure DevOps export tool.",
+        "status": "pending",
         "dependencies": [
           2,
           11,
           12,
           14
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "Implement technical documentation infrastructure including CLI --help output verification against PRD specifications, README.md with usage examples and expected outputs, error code documentation with troubleshooting guidance, and authentication setup instructions. Validate all documented examples execute correctly.",
+        "testStrategy": "BDD scenario: Given the CLI tool requires comprehensive documentation, When implementing help and reference systems, Then CLI --help should match PRD specifications exactly, README should provide clear usage examples with expected outputs, error codes should be documented with troubleshooting guidance, authentication setup should be clearly explained with examples, and all documented examples should execute successfully.",
         "subtasks": [
           {
             "id": 1,
             "title": "Scenario 1: Write failing test for CLI help documentation",
             "description": "Create a Behave scenario testing CLI help documentation and verify it fails initially.",
-            "details": "",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 15
+            "details": "",
+            "testStrategy": ""
           },
           {
             "id": 2,
             "title": "Implement 1: Make CLI help scenario pass and final refactor",
             "description": "Implement CLI help documentation to make scenario pass, then refactor for PRD compliance and production readiness.",
-            "details": "",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 15
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement comprehensive README with technical usage examples",
+            "description": "Create README.md with technical documentation including CLI usage patterns, expected JSON output formats, and authentication configuration examples.",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "details": "Include working examples for all CLI commands, show expected JSON output formats, and provide step-by-step authentication setup with real examples.",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement error code documentation and troubleshooting reference",
+            "description": "Create technical documentation for error codes with troubleshooting procedures for common failure scenarios.",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "details": "Document all exit codes (0, 1, 2), common error scenarios, and provide actionable troubleshooting steps with examples.",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Validate documented examples execute correctly",
+            "description": "Execute all CLI examples in documentation to verify technical accuracy and ensure they produce expected outputs.",
+            "status": "pending",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "Execute every CLI example in README and help documentation to verify accuracy and update any that don't work as expected.",
+            "testStrategy": ""
           }
         ]
       },
       {
         "id": 16,
         "title": "Fetch Work Item Types from Azure DevOps REST APIs",
-        "description": "Implement functionality to retrieve work item type definitions from Azure DevOps, including fields, states, and rules using the /wit/workitemtypes endpoint.",
-        "details": "Create a new module in /domain/work_item_types.py for domain objects representing work item types, fields, states, and rules. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /wit/workitemtypes endpoint. The implementation should fetch work item type definitions for a given project, including all associated metadata such as field definitions, workflow states, and business rules. Serialize API responses into strongly-typed domain objects with proper validation. Include comprehensive error handling for API failures, network issues, and malformed responses. Follow the established patterns from the existing HTTP client for authentication, logging, and resilience. Structure the code to support both individual work item type retrieval and bulk fetching of all types for a project.",
-        "testStrategy": "Write Behave scenarios in /features/work_item_types.feature to test fetching work item types from a real Azure DevOps project, including scenarios for successful retrieval, handling of missing work item types, and API error conditions. Create unit tests for domain object serialization and validation. Test error handling for network failures, authentication issues, and malformed API responses. Verify that the fetched work item type data includes all required fields (name, description, fields, states, rules) and that the domain objects properly represent the Azure DevOps work item type schema.",
+        "description": "As a process analyst, I want to export work item type definitions from Azure DevOps so that I can understand the process configuration and analyze how different work item types are structured and used across projects.",
         "status": "pending",
         "dependencies": [
           5,
           3
         ],
         "priority": "high",
+        "details": "Implement functionality to retrieve work item type definitions from Azure DevOps using the /wit/workitemtypes endpoint. Create a new module in /domain/work_item_types.py for domain objects representing work item types, fields, states, and rules. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx. The implementation should fetch work item type definitions for a given project, including all associated metadata such as field definitions, workflow states, and business rules. Focus on enabling the CLI command 'azdo-process-export process \"Demo Project\" --out project.json' to successfully export work item type definitions as part of the complete project configuration. Serialize API responses into strongly-typed domain objects with proper validation and include comprehensive error handling for API failures, network issues, and malformed responses.",
+        "testStrategy": "Write Behave scenarios in /features/work_item_types.feature to test the user-facing workflow: 'Given I have access to an Azure DevOps project with configured work item types And I have valid authentication credentials When I run \"azdo-process-export process 'Demo Project' --out project.json\" Then the output file should contain work item type definitions And each work item type should include name, fields, states, and rules And the structured logs should show work item type retrieval progress And the export should complete successfully even for projects with custom work item types'. Include additional scenarios for handling missing work item types, API error conditions, and authentication issues. Create unit tests for domain object serialization and validation.",
         "subtasks": [
           {
             "id": 1,
             "title": "Research: Work Item Types APIs",
             "description": "Research Azure DevOps REST APIs for work item types using Microsoft docs and azure-devops library documentation",
-            "details": "Use microsoft_docs_search and get-library-docs to understand work item types endpoints, response schemas, and best practices",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 16
+            "details": "Use microsoft_docs_search and get-library-docs to understand work item types endpoints, response schemas, and best practices",
+            "testStrategy": ""
           },
           {
             "id": 2,
             "title": "Plan: Work Item Types Implementation",
             "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing work item types fetch",
-            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 16
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement BDD Scenario: Export Work Item Types",
+            "description": "Implement the main user-facing BDD scenario for exporting work item type definitions",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "details": "Create the Behave scenario that tests the complete workflow from CLI command to JSON output containing work item type definitions with name, fields, states, and rules",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Create Domain Objects for Work Item Types",
+            "description": "Create /domain/work_item_types.py with domain objects for WorkItemType, Field, State, and Rule",
+            "status": "pending",
+            "dependencies": [
+              1
+            ],
+            "details": "Design domain objects that properly represent Azure DevOps work item type schema and support the user's need to understand process configuration",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement API Client for Work Item Types",
+            "description": "Add work item types fetching functionality to /infrastructure/azdo_client.py",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "details": "Implement methods to fetch work item type definitions using /wit/workitemtypes endpoint, with proper error handling and logging for user feedback",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Integrate Work Item Types into CLI Export",
+            "description": "Integrate work item types fetching into the main CLI export command",
+            "status": "pending",
+            "dependencies": [
+              5
+            ],
+            "details": "Ensure work item type definitions are included in the project.json output when users run the export command, with progress logging",
+            "testStrategy": ""
           }
         ]
       },
       {
         "id": 17,
         "title": "Fetch Work Item Fields from Azure DevOps REST APIs",
-        "description": "Implement functionality to retrieve field definitions from Azure DevOps using the /wit/fields endpoint, including field types, allowed values, constraints, and metadata.",
-        "details": "Create a new module in /domain/work_item_fields.py for domain objects representing field definitions including FieldDefinition, FieldType, FieldConstraints, and AllowedValues classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /wit/fields endpoint. The implementation should fetch all field definitions for a given project or organization, including field metadata such as data types (string, integer, datetime, etc.), validation rules, allowed values for picklist fields, and usage constraints. Serialize API responses into domain objects with proper error handling for malformed responses. Handle pagination if the API supports it. Include support for filtering fields by type or usage scope. Add comprehensive logging using the existing structured logging configuration. Place field-specific business logic in the domain layer and keep API interaction details in the infrastructure layer.",
-        "testStrategy": "Write Behave scenarios in /features/work_item_fields.feature to test fetching field definitions from a real Azure DevOps project, including scenarios for successful retrieval of all fields, filtering by field type, handling of API errors (401, 403, 404, 429, 500), and validation of field metadata completeness. Create unit tests for domain object serialization and validation logic. Test edge cases such as custom fields, fields with complex constraints, and fields with large allowed value lists. Verify proper error handling and logging for malformed API responses. Include performance tests for large field collections.",
+        "description": "As a data analyst, I want to export field definitions from Azure DevOps so that I can understand the data schema and build accurate reports that use the correct field types and constraints.",
         "status": "pending",
         "dependencies": [
           5,
@@ -1001,35 +1055,79 @@
           4
         ],
         "priority": "high",
+        "details": "Implement BDD-aligned functionality to retrieve comprehensive field definitions from Azure DevOps using the /wit/fields endpoint. The implementation should support the user scenario: exporting field metadata for data schema understanding and accurate reporting. Create domain objects in /domain/work_item_fields.py for FieldDefinition, FieldType, FieldConstraints, and AllowedValues classes. Implement API client logic in /infrastructure/azdo_client.py using httpx to fetch field definitions including data types, validation rules, allowed values for picklist fields, and constraints. Ensure custom fields are clearly distinguished from system fields. Include comprehensive field metadata retrieval with structured logging to show progress. The export should handle complex validation rules and be accessible via the main CLI command 'azdo-process-export process' with JSON output.",
+        "testStrategy": "Primary BDD scenario: Given I have access to an Azure DevOps project with custom and system fields and valid authentication credentials, When I run 'azdo-process-export process 'Demo Project' --out project.json', Then the output file should contain comprehensive field definitions with name, type, constraints, and allowed values, custom fields should be clearly distinguished from system fields, structured logs should show field metadata retrieval progress, and the export should handle fields with complex validation rules correctly. Include additional scenarios for API error handling (401, 403, 404, 429, 500) and edge cases such as large allowed value lists and complex field constraints.",
         "subtasks": [
           {
             "id": 1,
             "title": "Research: Work Item Fields APIs",
             "description": "Research Azure DevOps REST APIs for work item fields using Microsoft docs and azure-devops library documentation",
-            "details": "Use microsoft_docs_search and get-library-docs to understand fields endpoints, field definitions, and retrieval best practices",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 17
+            "details": "Use microsoft_docs_search and get-library-docs to understand fields endpoints, field definitions, and retrieval best practices",
+            "testStrategy": ""
           },
           {
             "id": 2,
             "title": "Plan: Work Item Fields Implementation",
             "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing work item fields fetch",
-            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 17
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Write BDD Scenario for Field Schema Export",
+            "description": "Create the primary BDD scenario for data analyst field schema export workflow",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "details": "Write the main scenario in /features/work_item_fields.feature: Given Azure DevOps project with custom and system fields, When running 'azdo-process-export process 'Demo Project' --out project.json', Then output contains comprehensive field definitions with proper structure and custom field distinction",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implement Field Definition Domain Objects",
+            "description": "Create domain objects for field definitions optimized for data schema understanding",
+            "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "details": "Implement FieldDefinition, FieldType, FieldConstraints, and AllowedValues classes in /domain/work_item_fields.py with clear distinction between custom and system fields, supporting the data analyst's need to understand schema for reporting",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Fields API Client Integration",
+            "description": "Create API client logic to fetch field definitions via /wit/fields endpoint",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "details": "Implement field retrieval in /infrastructure/azdo_client.py using httpx, focusing on comprehensive metadata collection including complex validation rules and constraints needed for accurate data analysis",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Integrate Fields Export into Main CLI Command",
+            "description": "Connect field definitions export to the main azdo-process-export command",
+            "status": "pending",
+            "dependencies": [
+              5
+            ],
+            "details": "Ensure field definitions are included in the JSON output when running 'azdo-process-export process' command, with structured logging showing field metadata retrieval progress for user visibility",
+            "testStrategy": ""
           }
         ]
       },
       {
         "id": 18,
         "title": "Fetch Process Behaviors from Azure DevOps REST APIs",
-        "description": "Implement functionality to retrieve process behavior configurations from Azure DevOps using the /processes/{processId}/behaviors endpoint, including state transitions, business rules, and process customizations.",
-        "details": "Create a new module in /domain/process_behaviors.py for domain objects representing process behaviors, including ProcessBehavior, StateTransition, BusinessRule, and ProcessCustomization classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /processes/{processId}/behaviors endpoint. The implementation should fetch behavior configurations for a given process ID, including state transition rules, field validation rules, and custom process behaviors. Serialize API responses into strongly-typed domain objects with proper validation. Handle API pagination if the behaviors endpoint supports it. Include proper error handling for common scenarios like invalid process IDs (404), unauthorized access (401/403), and API rate limiting (429). Use the existing async HTTP client patterns established in the codebase for consistency. Add logging for API calls and error conditions using the structured logging framework already in place.",
-        "testStrategy": "Write Behave scenarios in /features/process_behaviors.feature to test fetching process behaviors from a real Azure DevOps organization, including scenarios for successful retrieval of behaviors for valid process IDs, handling of invalid or non-existent process IDs (404 errors), authentication failures (401/403), API rate limiting (429), and server errors (500). Create unit tests for domain object serialization and validation of ProcessBehavior, StateTransition, and BusinessRule classes. Test edge cases such as processes with no custom behaviors, processes with complex state transition rules, and proper handling of API pagination. Verify that the structured logging output contains appropriate context for debugging API interactions and errors.",
+        "description": "As a process coach, I want to export process behavior configurations from Azure DevOps so that I can analyze workflow rules and state transitions to identify process optimization opportunities. Implement functionality to retrieve process behaviors using the /processes/{processId}/behaviors endpoint and export them in a format suitable for workflow analysis.",
         "status": "pending",
         "dependencies": [
           5,
@@ -1037,70 +1135,103 @@
           4
         ],
         "priority": "high",
+        "details": "Implement user-focused process behavior export functionality that enables process coaches to analyze workflow optimization opportunities. Create domain objects in /domain/process_behaviors.py for ProcessBehavior, StateTransition, BusinessRule, and ProcessCustomization that clearly represent workflow analysis data. Implement API client logic in /infrastructure/azdo_client.py to fetch behavior configurations via /processes/{processId}/behaviors endpoint. The CLI command 'azdo-process-export process \"Demo Project\" --out project.json' should export process behaviors with state transitions, business rules, and customizations in a structured format that supports workflow analysis. Include clear documentation of state transition rules to enable process optimization analysis. Handle custom process templates correctly and provide structured logging to show behavior retrieval progress for user feedback.",
+        "testStrategy": "Write primary BDD scenario in /features/process_behaviors.feature: Given access to Azure DevOps organization with configured process behaviors and valid authentication, When running 'azdo-process-export process \"Demo Project\" --out project.json', Then output file contains process behavior configurations with state transitions, business rules, and customizations, structured logs show retrieval progress, export handles custom process templates, and state transition rules are documented for analysis. Include error handling scenarios for invalid credentials, missing processes, and API failures with appropriate exit codes and user-friendly error messages.",
         "subtasks": [
           {
             "id": 1,
             "title": "Research: Process Behaviors APIs",
             "description": "Research Azure DevOps REST APIs for process behaviors using Microsoft docs and azure-devops library documentation",
-            "details": "Use microsoft_docs_search and get-library-docs to understand behaviors endpoints, process configurations, and retrieval patterns",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 18
+            "details": "Use microsoft_docs_search and get-library-docs to understand behaviors endpoints, process configurations, and retrieval patterns",
+            "testStrategy": ""
           },
           {
             "id": 2,
             "title": "Plan: Process Behaviors Implementation",
             "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing process behaviors fetch",
-            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 18
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "BDD Scenario: Process Coach Workflow Analysis Export",
+            "description": "Implement primary BDD scenario for process coach exporting behavior configurations for workflow analysis",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "details": "Create /features/process_behaviors.feature with scenario: Given Azure DevOps org with process behaviors and valid auth, When running 'azdo-process-export process \"Demo Project\" --out project.json', Then output contains behaviors with state transitions/rules/customizations, logs show progress, handles custom templates, and rules documented for analysis",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Domain Objects: Workflow Analysis Focus",
+            "description": "Create process behavior domain objects optimized for workflow analysis and process optimization",
+            "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "details": "Implement ProcessBehavior, StateTransition, BusinessRule, and ProcessCustomization classes in /domain/process_behaviors.py with clear workflow analysis properties and methods that support process coach needs for identifying optimization opportunities",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "CLI Integration: Process Coach Command",
+            "description": "Integrate process behavior export into CLI with user-friendly output for process coaches",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "details": "Extend CLI to support process behavior export with structured output suitable for workflow analysis, including clear state transition documentation and process optimization insights",
+            "testStrategy": ""
           }
         ]
       },
       {
         "id": 19,
         "title": "Fetch Teams from Azure DevOps REST APIs",
-        "description": "Implement functionality to retrieve team information from Azure DevOps using the /core/teams endpoint, including team members, settings, and configurations.",
-        "details": "Create a new module in /domain/teams.py for domain objects representing teams, including Team, TeamMember, TeamSettings, and TeamConfiguration classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /core/teams endpoint. The implementation should fetch team information for a given project, including team metadata, member lists with roles and permissions, team settings such as backlog navigation levels and bug behavior, and team configurations like area paths and iteration paths. Serialize API responses into strongly-typed domain objects with proper validation. Handle pagination for large team member lists and implement proper error handling for common scenarios like unauthorized access, non-existent teams, and API rate limiting. Include support for filtering teams by project scope and retrieving detailed member information including user identities, roles, and team-specific permissions.",
-        "testStrategy": "Write Behave scenarios in /features/teams.feature to test fetching teams from a real Azure DevOps project, including scenarios for successful retrieval of all teams, fetching specific team details with members, handling of non-existent teams (404 errors), authentication failures (401/403), API rate limiting (429), and server errors (500). Create unit tests for domain object serialization and validation, ensuring proper handling of optional fields and edge cases. Test pagination scenarios with teams that have large member lists. Verify proper error messages are returned for invalid team IDs or project names. Include integration tests that validate the complete flow from API call to domain object creation.",
+        "description": "As a team lead, I want to export team information from Azure DevOps so that I can understand team structure, member roles, and configuration settings for organizational planning and team optimization.",
         "status": "pending",
         "dependencies": [
           5,
           3
         ],
         "priority": "high",
+        "details": "Implement end-to-end functionality to make this BDD scenario pass: Given I have access to an Azure DevOps project with configured teams and valid authentication credentials, When I run 'azdo-process-export process \"Demo Project\" --out project.json', Then the output file should contain comprehensive team information, each team should include member lists with roles and configuration settings, team settings like backlog navigation and working days should be captured, the structured logs should show team data retrieval progress, and the export should handle teams with large member lists efficiently. Create domain objects in /domain/teams.py for Team, TeamMember, TeamSettings, and TeamConfiguration classes. Implement API client logic in /infrastructure/azdo_client.py using the /core/teams endpoint. Focus on user value: enabling organizational planning through understanding team structure rather than just technical API implementation.",
+        "testStrategy": "Single BDD scenario testing the complete user workflow: 'Export team information for organizational planning'. Given access to Azure DevOps project with configured teams and valid credentials, When running the export command, Then verify the output contains comprehensive team data including member lists, roles, configuration settings, team settings like backlog navigation and working days, structured logs showing progress, and efficient handling of large member lists. Include edge case scenarios for teams without members, teams with complex configurations, and authentication/permission issues.",
         "subtasks": [
           {
             "id": 1,
             "title": "Research: Teams APIs",
             "description": "Research Azure DevOps REST APIs for teams using Microsoft docs and azure-devops library documentation",
-            "details": "Use microsoft_docs_search and get-library-docs to understand teams endpoints, team configurations, and member retrieval patterns",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 19
+            "details": "Use microsoft_docs_search and get-library-docs to understand teams endpoints, team configurations, and member retrieval patterns",
+            "testStrategy": ""
           },
           {
             "id": 2,
             "title": "Plan: Teams Implementation",
             "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing teams fetch",
-            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 19
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "testStrategy": ""
           }
         ]
       },
       {
         "id": 20,
         "title": "Fetch Backlogs from Azure DevOps REST APIs",
-        "description": "Implement functionality to retrieve backlog configurations, iterations, and team settings from Azure DevOps using the /work/backlogs and /work/teamsettings endpoints.",
-        "details": "Create a new module in /domain/backlogs.py for domain objects representing backlogs, including Backlog, BacklogConfiguration, Iteration, TeamSettings, and BacklogLevel classes. Implement the API client logic in /infrastructure/azdo_client.py using either azure-devops==7.1.0 library or direct REST calls via httpx to the /work/backlogs and /work/teamsettings endpoints. The implementation should fetch backlog configurations for a given team and project, including backlog hierarchy levels (Epic, Feature, User Story, etc.), iteration paths and dates, team capacity settings, and working days configuration. For the /work/backlogs endpoint, retrieve all configured backlog levels and their associated work item types. For the /work/teamsettings endpoint, fetch team-specific settings including default iteration path, backlog navigation levels, and working days. Serialize API responses into domain objects with proper error handling for authentication failures (401/403), missing resources (404), rate limiting (429), and server errors (500). Include validation for required fields and proper type conversion for dates and numeric values. Use the existing async HTTP client patterns established in previous tasks for consistent error handling and logging.",
-        "testStrategy": "Write Behave scenarios in /features/backlogs.feature to test fetching backlog configurations from a real Azure DevOps project, including scenarios for successful retrieval of all backlog levels, fetching team settings with iterations and capacity, handling of non-existent teams or projects (404 errors), authentication failures (401/403), API rate limiting (429), and server errors (500). Create unit tests for domain object serialization and validation, ensuring proper handling of optional fields, date parsing, and numeric conversions. Test edge cases such as teams with no configured backlogs, empty iteration lists, and malformed API responses. Verify that the structured JSON logging captures all API interactions with appropriate log levels and context information.",
+        "description": "As a scrum master, I want to export backlog configurations and team settings from Azure DevOps so that I can analyze sprint planning efficiency and optimize iteration management across multiple teams.",
         "status": "pending",
         "dependencies": [
           5,
@@ -1108,26 +1239,61 @@
           19
         ],
         "priority": "high",
+        "details": "Implement BDD-driven functionality to retrieve backlog configurations, iterations, and team settings that enables sprint planning analysis. The feature should support the CLI command 'azdo-process-export process \"Demo Project\" --out project.json' and export comprehensive backlog data including hierarchy levels (Epic, Feature, User Story, etc.), iteration paths and dates, team capacity settings, and working days configuration. Create domain objects in /domain/backlogs.py for Backlog, BacklogConfiguration, Iteration, TeamSettings, and BacklogLevel classes. Implement API client logic in /infrastructure/azdo_client.py using /work/backlogs and /work/teamsettings endpoints. The export should handle complex backlog hierarchies and provide structured logging for data retrieval progress. Focus on delivering value for sprint planning efficiency analysis rather than just technical API integration.",
+        "testStrategy": "Write a primary BDD scenario in /features/backlogs.feature: Given access to Azure DevOps project with configured backlogs and team settings, When running 'azdo-process-export process \"Demo Project\" --out project.json', Then output should contain backlog configurations and iteration settings with team hierarchy levels, iteration paths, working days, and capacity settings. Include structured logs showing backlog data retrieval progress and proper handling of complex backlog hierarchies. Add supporting scenarios for authentication failures, missing resources, and API errors. Focus on user value validation rather than just technical API testing.",
         "subtasks": [
           {
             "id": 1,
             "title": "Research: Backlogs APIs",
             "description": "Research Azure DevOps REST APIs for backlogs using Microsoft docs and azure-devops library documentation",
-            "details": "Use microsoft_docs_search and get-library-docs to understand backlogs endpoints, backlog configurations, and work item retrieval patterns",
             "status": "pending",
             "dependencies": [],
-            "parentTaskId": 20
+            "details": "Use microsoft_docs_search and get-library-docs to understand backlogs endpoints, backlog configurations, and work item retrieval patterns",
+            "testStrategy": ""
           },
           {
             "id": 2,
             "title": "Plan: Backlogs Implementation",
             "description": "Based on research findings, create RED->GREEN->REFACTOR subtasks for implementing backlogs fetch",
-            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
             "status": "pending",
             "dependencies": [
               1
             ],
-            "parentTaskId": 20
+            "details": "After completing research, break down the implementation into focused BDD/TDD cycles with single scenarios",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "BDD Scenario: Sprint Planning Analysis Export",
+            "description": "Write the primary BDD scenario for scrum master backlog export use case",
+            "status": "pending",
+            "dependencies": [
+              2
+            ],
+            "details": "Create Behave scenario in /features/backlogs.feature that validates the complete user journey: running CLI command to export backlog configurations for sprint planning efficiency analysis, including backlog hierarchies, iteration settings, team capacity, and working days",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Domain Objects: Backlog Configuration Models",
+            "description": "Implement domain objects focused on sprint planning analysis data",
+            "status": "pending",
+            "dependencies": [
+              3
+            ],
+            "details": "Create /domain/backlogs.py with Backlog, BacklogConfiguration, Iteration, TeamSettings, and BacklogLevel classes optimized for capturing sprint planning efficiency data and iteration management insights",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Infrastructure: Backlog API Integration",
+            "description": "Implement API client for /work/backlogs and /work/teamsettings endpoints",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "details": "Build API integration in /infrastructure/azdo_client.py that retrieves comprehensive backlog data for sprint planning analysis, including complex hierarchy handling and structured logging for data retrieval progress",
+            "testStrategy": ""
           }
         ]
       }
